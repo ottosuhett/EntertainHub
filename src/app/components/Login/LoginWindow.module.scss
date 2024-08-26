@@ -26,4 +26,26 @@
 }
 .rightContainer{
     background-image: url('../../../../public/images/dark_rabbit.jpg');
+    .mainRightContainerContent{
+        margin-left: 4rem;
+
+        .title,.loginTxt{
+            font-size: 6.4rem;
+          }
+          .title{
+              color:#811F89; 
+          }
+          .loginTxt{
+              color: #fff;
+          }
+          .titleContainer{
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              gap: 1.5rem;
+      
+          }
+    }
+    
 }

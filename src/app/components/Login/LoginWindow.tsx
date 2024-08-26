@@ -11,7 +11,15 @@ export default function LoginWindow (props: ILoginWindowProps) {
       <div className={styles.leftContainer}>
         <p className={styles.leftDrescriptionMsg}>Store your <span className={styles.highlightMsg}>favorite</span> media</p>
       </div>
-      <div className={styles.rightContainer}></div>
+      <div className={styles.rightContainer}>
+        <div className={styles.mainRightContainerContent}>
+          <div className={styles.titleContainer}>
+            <p className={styles.title}>Entertainhub</p>
+            <p className={styles.loginTxt}>Login</p>
+          </div>
+        </div>
+        
+      </div>
     </Container>
   );
 }
