@@ -9,9 +9,20 @@
     height: 100vh;
     width: 100%;
 }
+.highlightMsg{
+    font-size: 4rem;
+    color: #B084C5;
+}
 .leftContainer{
-   
    background-image: url('../../../../public/images/rabbit_head.jpg');
+   display: flex;
+   justify-content: center;
+   align-items: flex-end;
+   .leftDrescriptionMsg{
+    font-size: 4rem;
+    color:#7A3C97;
+    margin-bottom: 1rem;
+   }
 }
 .rightContainer{
     background-image: url('../../../../public/images/dark_rabbit.jpg');
