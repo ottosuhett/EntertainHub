@@ -1,5 +1,8 @@
+@import "../../variableStyle/variables.scss";
+
 .mainContainer{
     display: flex;
+    
 }
 .leftContainer,.rightContainer{
     height: auto;
@@ -7,11 +10,11 @@
     background-position:center; 
     background-repeat: no-repeat;
     height: 100vh;
-    width: 100%;
+    width: 50%;
 }
 .highlightMsg{
     font-size: 4rem;
-    color: #B084C5;
+    color: $lightTextColor;
 }
 .leftContainer{
    background-image: url('../../../../public/images/rabbit_head.jpg');
@@ -26,14 +29,22 @@
 }
 .rightContainer{
     background-image: url('../../../../public/images/dark_rabbit.jpg');
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    
     .mainRightContainerContent{
         margin-left: 4rem;
-
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100vh;
+        align-items: center;
         .title,.loginTxt{
             font-size: 6.4rem;
           }
           .title{
-              color:#811F89; 
+              color:$darkTextColor; 
           }
           .loginTxt{
               color: #fff;
@@ -44,7 +55,23 @@
               align-items: center;
               flex-direction: column;
               gap: 1.5rem;
-      
+              
+          }
+
+          .inputsDiv{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            width: 100%;
+            .input{
+                display: flex;
+                min-width: 60%;
+                font-size: 3rem;
+                text-align: center;
+            }
+            
           }
     }
     
