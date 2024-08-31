@@ -1,4 +1,4 @@
-@import "../../variableStyle/variables.scss";
+@import "../../app/variableStyle/variables.scss";
 
 .mainContainer{
     display: flex;
@@ -17,7 +17,7 @@
     color: $lightTextColor;
 }
 .leftContainer{
-   background-image: url('../../../../public/images/rabbit_head.jpg');
+   background-image: url('../../../public/images/rabbit_head.jpg');
    display: flex;
    justify-content: center;
    align-items: flex-end;
@@ -28,7 +28,7 @@
    }
 }
 .rightContainer{
-    background-image: url('../../../../public/images/dark_rabbit.jpg');
+    background-image: url('../../../public/images/dark_rabbit.jpg');
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -71,8 +71,21 @@
                 font-size: 3rem;
                 text-align: center;
             }
-            
           }
+          .registerMsg{
+            font-size: 1.3rem;
+            color: #fff;
+            .registerLink{
+                color: $lightTextColor;
+                font-size: 1.5rem;
+                background-color: transparent !important;
+                border-color: transparent !important;
+                &:hover{
+                    cursor: pointer;
+                }
+            }
+        }
+        
     }
     
 }

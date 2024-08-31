@@ -1,16 +1,21 @@
-import React from 'react';
+import React , {useState} from 'react';
 import styles from "./LoginWindow.module.scss"
 import {Container} from "react-bootstrap"
 import {Form, Button} from 'react-bootstrap';
-import ButtonComp from "@/app/components/Btns/ButtonComp"
+import ButtonComp from "@/components/Btns/ButtonComp"
 
 export interface ILoginWindowProps {
 }
 
 export default function LoginWindow (props: ILoginWindowProps) {
+  const [openRegister, setOpenRegister] = useState<boolean>(false)
+  const handleRegisterClick=()=>{
+
+  }
   return (
     <Container fluid className={styles.mainContainer}>
       <div className={styles.leftContainer}>
+        {openRegister ? "Register" :null}
         <p className={styles.leftDrescriptionMsg}>Store your <span className={styles.highlightMsg}>favorite</span> media</p>
       </div>
 
@@ -35,7 +40,14 @@ export default function LoginWindow (props: ILoginWindowProps) {
               
               />
             </div>
-
+            <p className={styles.registerMsg}>Don't have an account, 
+              <Button 
+                className={styles.registerLink}
+                onClick={()=>setOpenRegister(!openRegister)}
+              >
+                  register now
+            </Button>
+            </p>
             <ButtonComp title={"Login"}/>
         </div>
         
