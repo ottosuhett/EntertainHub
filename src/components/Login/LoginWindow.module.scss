@@ -19,13 +19,30 @@
 .leftContainer{
    background-image: url('../../../public/images/rabbit_head.jpg');
    display: flex;
-   justify-content: center;
-   align-items: flex-end;
+   flex-direction: column;
+   justify-content: space-between;
+   align-items: center;
    .leftDrescriptionMsg{
     font-size: 4rem;
     color:#7A3C97;
     margin-bottom: 1rem;
    }
+   .inputsDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    .inputRegister{
+        display: flex;
+        min-width: 50%;
+        font-size: 2rem;
+        text-align: center;
+        &::placeholder{
+            font-size: 1rem;
+        }
+    }
+}
 }
 .rightContainer{
     background-image: url('../../../public/images/dark_rabbit.jpg');
@@ -89,3 +106,4 @@
     }
     
 }
+

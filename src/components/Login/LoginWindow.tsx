@@ -9,13 +9,26 @@ export interface ILoginWindowProps {
 
 export default function LoginWindow (props: ILoginWindowProps) {
   const [openRegister, setOpenRegister] = useState<boolean>(false)
-  const handleRegisterClick=()=>{
 
-  }
   return (
     <Container fluid className={styles.mainContainer}>
       <div className={styles.leftContainer}>
-        {openRegister ? "Register" :null}
+        <div></div>
+        {openRegister ? 
+        <div className={styles.inputsDiv}>
+          <Form.Control
+          type="text" 
+          placeholder="Choose a username" 
+          className={styles.inputRegister}
+          />
+          <Form.Control 
+          type="text" 
+          placeholder="Choose a password max 8 characters" 
+          className={styles.inputRegister}
+          maxLength={8}
+          />
+        </div>
+        :null}
         <p className={styles.leftDrescriptionMsg}>Store your <span className={styles.highlightMsg}>favorite</span> media</p>
       </div>
 
