@@ -1,15 +1,90 @@
-import React , {useState} from 'react';
+import React , {useState,useContext,useEffect} from 'react';
 import styles from "./LoginWindow.module.scss"
 import {Container} from "react-bootstrap"
 import {Form, Button} from 'react-bootstrap';
 import ButtonComp from "@/components/Btns/ButtonComp"
+import { MainContext } from '@/app/context/MainContext';
 
 export interface ILoginWindowProps {
 }
 
 export default function LoginWindow (props: ILoginWindowProps) {
+  const {isLogged,setIsLogged} = useContext(MainContext)
   const [openRegister, setOpenRegister] = useState<boolean>(false)
+  const [newUsername, setNewUsername] = useState<string>("")
+  const [newPassword,setNewPassword] = useState<string>("")
+  const [userName, setUserName ] = useState<string>("")
+  const [passWord, setPassword] = useState<string>("")
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (isRegistered) {
+      fetch('/api/list-users')
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Registered users:', data.users);
+          setIsRegistered(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching users:', error);
+        });
+    }
+  }, [isRegistered]);
+
+  const handleRegister = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: newUsername, password: newPassword }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('User registered successfully');
+        setIsRegistered(true);
+      } else {
+        alert(data.error);
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+      alert('An error occurred while registering');
+    }
+    setNewUsername("")
+    setNewPassword("")
+    setOpenRegister(false)
+  };
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: userName, password: passWord }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Login successful');
+        setIsLogged(true)
+      } else {
+        alert(data.error);
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+      alert('An error occurred during login');
+    }
+  };
   return (
     <Container fluid className={styles.mainContainer}>
       <div className={styles.leftContainer}>
@@ -20,13 +95,20 @@ export default function LoginWindow (props: ILoginWindowProps) {
           type="text" 
           placeholder="Choose a username" 
           className={styles.inputRegister}
+          value={newUsername}
+          onChange={(e) => setNewUsername(e.target.value)}
+          required
           />
           <Form.Control 
-          type="text" 
+          type="password"  
           placeholder="Choose a password max 8 characters" 
           className={styles.inputRegister}
           maxLength={8}
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          required
           />
+          <ButtonComp title={"Register"} onClickEvent={handleRegister}/>
         </div>
         :null}
         <p className={styles.leftDrescriptionMsg}>Store your <span className={styles.highlightMsg}>favorite</span> media</p>
@@ -45,11 +127,15 @@ export default function LoginWindow (props: ILoginWindowProps) {
               type="text" 
               placeholder="User" 
               className={styles.input}
+              value={userName}
+              onChange={(e)=>setUserName(e.target.value)}
               />
               <Form.Control 
-              type="text" 
+              type="password" 
               placeholder="Password" 
               className={styles.input}
+              value={passWord}
+              onChange={(e)=>setPassword(e.target.value)}
               
               />
             </div>
@@ -61,7 +147,7 @@ export default function LoginWindow (props: ILoginWindowProps) {
                   register now
             </Button>
             </p>
-            <ButtonComp title={"Login"}/>
+            <ButtonComp title={"Login"} onClickEvent={handleLogin}/>
         </div>
         
       </div>

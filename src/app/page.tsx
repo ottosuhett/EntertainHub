@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-     <LoginWindow />
+     {isLogged ? <h1>Logado Testando</h1> : <LoginWindow />}
     </main>
   );
 }
