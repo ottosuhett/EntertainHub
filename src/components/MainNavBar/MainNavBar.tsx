@@ -25,13 +25,19 @@ export default function MainNavBar (props: IMainNavBarProps) {
                     </div>
                     <Nav className={styles.navItemsDiv}>
                         <Nav.Link 
-                        className={`${selectedNavBar === "Home" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}>
+                        className={`${selectedNavBar === "Home" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}
+                        onClick={()=>setSelectedNavBar("Home")}
+                        >
                             Home
                         </Nav.Link>
-                        <Nav.Link className={`${selectedNavBar === "Search" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}>
+                        <Nav.Link className={`${selectedNavBar === "Search" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}
+                        onClick={()=>setSelectedNavBar("Search")}
+                        >
                             Search
                         </Nav.Link>
-                        <Nav.Link className={`${selectedNavBar === "MyList" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}>
+                        <Nav.Link className={`${selectedNavBar === "MyList" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}
+                        onClick={()=>setSelectedNavBar("MyList")}
+                        >
                             MyList
                         </Nav.Link>
                     </Nav>
