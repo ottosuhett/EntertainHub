@@ -11,7 +11,6 @@ export default function Home() {
   return (
     <main className={styles.main}>
      {isLogged ? <LoggedWindow />: <LoginWindow />}
-     <LoggedWindow />
     </main>
   );
 }
