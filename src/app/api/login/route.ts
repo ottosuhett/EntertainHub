@@ -1,27 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import {openDb} from "@/app/functions/genericFunctions"
 import sqlite3 from 'sqlite3';
 import bcrypt from 'bcrypt';
-
-// Abrindo o db SQLite
-const openDb = () => {
-  const db = new sqlite3.Database('./users.db');
-
-  db.serialize(() => {
-    // Crio se nao existir
-    db.run(
-      'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)',
-      (err) => {
-        if (err) {
-          console.error('Error creating table:', err.message);
-        } else {
-          console.log('Table "users" is ready.');
-        }
-      }
-    );
-  });
-
-  return db;
-};
 
 interface User {
   id: number;
