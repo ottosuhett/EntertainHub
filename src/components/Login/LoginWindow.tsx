@@ -1,7 +1,6 @@
 import React , {useState,useContext,useEffect} from 'react';
 import styles from "./LoginWindow.module.scss"
-import {Container} from "react-bootstrap"
-import {Form, Button} from 'react-bootstrap';
+import {Form, Button,Container} from 'react-bootstrap';
 import ButtonComp from "@/components/Btns/ButtonComp"
 import { MainContext } from '@/app/context/MainContext';
 
