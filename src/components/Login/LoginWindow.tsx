@@ -33,58 +33,79 @@ export default function LoginWindow (props: ILoginWindowProps) {
 
   const handleRegister = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent) => {
     event.preventDefault();
+    const isEmptyField = isEmpty(newUsername,newPassword)
 
-    try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: newUsername, password: newPassword }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert('User registered successfully');
-        setIsRegistered(true);
-      } else {
-        alert(data.error);
+    if(isEmptyField){
+      window.alert("Prencha o campo em branco")
+    }else{
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: newUsername, password: newPassword }),
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          alert('User registered successfully');
+          setIsRegistered(true);
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+        alert('An error occurred while registering');
       }
-    } catch (error) {
-      console.error('An error occurred:', error);
-      alert('An error occurred while registering');
+      setNewUsername("")
+      setNewPassword("")
+      setOpenRegister(false)
     }
-    setNewUsername("")
-    setNewPassword("")
-    setOpenRegister(false)
+    
   };
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: userName, password: passWord }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert('Login successful');
-        setIsLogged(true)
-      } else {
-        alert(data.error);
+    const isEmptyField = isEmpty(userName,passWord)
+    if(isEmptyField){
+      window.alert("Prencha o campo do login em branco")
+    }else{
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: userName, password: passWord }),
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          alert('Login successful');
+          setIsLogged(true)
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+        alert('An error occurred during login');
       }
-    } catch (error) {
-      console.error('An error occurred:', error);
-      alert('An error occurred during login');
     }
+    
   };
+
+  const isEmpty=(userName:string,psw:string):boolean=>{
+    if(userName.length === 0 || psw.length === 0){
+      return true
+    }
+    else{
+      return false
+    }
+
+  }
   return (
     <Container fluid className={styles.mainContainer}>
       <div className={styles.leftContainer}>
