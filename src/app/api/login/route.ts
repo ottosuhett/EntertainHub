@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {openDb} from "@/app/functions/genericFunctions"
 import sqlite3 from 'sqlite3';
 import bcrypt from 'bcrypt';
 
@@ -8,7 +7,26 @@ interface User {
   username: string;
   password: string;
 }
+// Função abre o db do SQLite
+const openDb = () => {
+  const db = new sqlite3.Database('./users.db');
 
+  db.serialize(() => {
+    // Cria a tabela se não existi
+    db.run(
+      'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)',
+      (err) => {
+        if (err) {
+          console.error('Error creating table:', err.message);
+        } else {
+          console.log('Table "users" is ready.');
+        }
+      }
+    );
+  });
+
+  return db;
+};
 const getUser = (db: sqlite3.Database, username: string): Promise<User | undefined> => {
   return new Promise((resolve, reject) => {
     db.get<User>('SELECT * FROM users WHERE username = ?', [username], (err, row) => {

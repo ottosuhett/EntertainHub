@@ -1,0 +1,9 @@
+.inputControl{
+    width: 60rem;
+    height: 4.5rem;
+    text-align: center;
+    &::placeholder{
+        text-align: center;
+        font-size: 2rem;
+    }
+}

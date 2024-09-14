@@ -3,7 +3,12 @@
 .mainContainer{
     height: 100vh;
     background-image: url('../../../public/images/dark_way_zoom_out.jpg');
+    //background-size: 100%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 3rem;
 }
