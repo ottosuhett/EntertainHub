@@ -1,12 +1,18 @@
-.gameList{
+.gameList,.shortList{
     display: flex;
     flex-wrap: nowrap;
     gap: 1.5rem;
-    justify-content: flex-start;
-    align-items: flex-start;
     width: 100%;
     overflow-x: auto; 
     height: auto;
+}
+.gameList{
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.shortList{
+    justify-content: center;
+    align-items: center;
 }
 .cardGame{
     max-width: 13rem;
@@ -25,7 +31,23 @@
     }
     .gameName{
         font-size: 1.5rem;
-        color: #fff;    
+        color: #fff;  
+        min-height: 4rem;  
+    }
+    .bodyText{
+        flex-grow: 1;
+    }
+    .btnContainer{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
     }
     
 }
+.cardBody {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between; 
+  }
