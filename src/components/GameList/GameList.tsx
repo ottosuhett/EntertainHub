@@ -7,8 +7,7 @@ export interface IGameListProps {
 }
 
 export default function GameList (props: IGameListProps) {
-    const {selectedNavBar,setSelectedNavBar,gameList, setGameList} = useContext(MainContext)
-    const apiKey = process.env.NEXT_PUBLIC_API_KEY
+    const {gameList, setGameList,searchedGame} = useContext(MainContext)
     
     const fetchGameList = async () => {
         if(gameList.length === 0){
@@ -21,10 +20,17 @@ export default function GameList (props: IGameListProps) {
     useEffect(() => {
         fetchGameList();
     }, []);
+
+    const filteredGameList = gameList.filter((game) =>
+        game.name.toLowerCase().includes(searchedGame.toLowerCase())
+    );
+
+    const listToRender = searchedGame.length > 0 ? filteredGameList : gameList
+    
   return (
     <div className={styles.gameList}>
         {gameList.length > 0 ? (
-          gameList.map((game) => (
+          listToRender.map((game) => (
               <Card className={styles.cardGame}>
                 <Card.Img 
                 variant="top" 

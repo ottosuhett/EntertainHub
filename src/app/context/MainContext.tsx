@@ -17,6 +17,8 @@ export interface MainContextType {
     setSelectedNavBar:React.Dispatch<React.SetStateAction<string>>
     gameList:Game[]
     setGameList:React.Dispatch<React.SetStateAction<Game[]>>
+    searchedGame:string,
+    setSearchedGame:React.Dispatch<React.SetStateAction<string>>
 }
 
 export const MainContext = React.createContext<MainContextType>({
@@ -27,7 +29,9 @@ export const MainContext = React.createContext<MainContextType>({
     selectedNavBar:"",
     setSelectedNavBar: ()=>{},
     gameList:[],
-    setGameList:()=>{}
+    setGameList:()=>{},
+    searchedGame:"",
+    setSearchedGame:()=>{}
 });
 
 

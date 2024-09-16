@@ -9,9 +9,10 @@ export const MainContextProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [user, setUser] = useState("")
   const [selectedNavBar,setSelectedNavBar] = useState("Home")
   const [gameList, setGameList] = useState<Game[]>([]);
+  const [searchedGame, setSearchedGame]=useState("")
 
   return (
-    <MainContext.Provider value={{isLogged, setIsLogged,user, setUser,selectedNavBar,setSelectedNavBar,gameList, setGameList}}>
+    <MainContext.Provider value={{isLogged, setIsLogged,user, setUser,selectedNavBar,setSelectedNavBar,gameList, setGameList,searchedGame, setSearchedGame}}>
       {children}
     </MainContext.Provider>
   );
