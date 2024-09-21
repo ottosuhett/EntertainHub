@@ -2,7 +2,6 @@
 
 .mainContainer{
     display: flex;
-    
 }
 .leftContainer,.rightContainer{
     height: auto;
@@ -35,7 +34,7 @@
     width: 100%;
     .inputRegister{
         display: flex;
-        min-width: 50%;
+        width: 70%;
         font-size: 2rem;
         text-align: center;
         &::placeholder{
@@ -84,7 +83,7 @@
             width: 100%;
             .input{
                 display: flex;
-                min-width: 60%;
+                width: 70%;
                 font-size: 3rem;
                 text-align: center;
             }

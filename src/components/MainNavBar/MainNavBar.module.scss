@@ -1,9 +1,13 @@
 @import "../../app/variableStyle/variables.scss";
+.NavBar{
+    background-color: transparent !important;
+}
 .mainContainer{
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: transparent !important;
     .mainNavBrand{
         display: flex;
         justify-content: center;
@@ -23,12 +27,29 @@
         font-size: 2.5rem;
         &:hover{
             cursor: pointer;
+            color: $primaryBtbColor !important;
         }
     }
     .selectedNav{
-        color: $darkTextColor;
+        color: $darkTextColor !important;
     }
     .unselectedNav{
-        color: $unselectedNavColor;
+        color: $unselectedNavColor !important;
+    }
+}
+@media(max-width:$mediumWindowSize){
+    .mainContainer{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .brandTitle{
+            font-size: 2rem
+        }
+        .navLinkITem{
+            font-size: 2rem;
+        }
+        .mainNavBrand{
+            flex-direction: column;
+        }
     }
 }

@@ -1,9 +1,18 @@
+@import "../../app/variableStyle/variables.scss";
 .inputControl{
-    width: 60rem;
+    width: 50rem !important;
     height: 4.5rem;
     text-align: center;
     &::placeholder{
         text-align: center;
         font-size: 2rem;
+    }
+}
+.mainContainer{
+    width: 100%;
+}
+@media(max-width:$mediumWindowSize){
+    .inputControl{
+        width: 40rem !important;
     }
 }

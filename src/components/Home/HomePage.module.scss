@@ -1,0 +1,21 @@
+@import "../../app/variableStyle/variables.scss";
+.title{
+    color: #fff;
+    font-size: 3rem;
+    text-align: center;
+}
+.itemContainer{
+    text-align: center;
+}
+.gameImg{
+    width: 75%;
+}
+.gameName{
+    color: #fff;
+    font-size: 3rem;
+}
+@media(max-width:$mediumWindowSize){
+    .title{
+        font-size: 2.5rem;
+    }
+}

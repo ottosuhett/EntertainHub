@@ -9,18 +9,6 @@ export interface IGameListProps {
 
 export default function GameList (props: IGameListProps) {
     const {gameList, setGameList,searchedGame} = useContext(MainContext)
-    
-    const fetchGameList = async () => {
-        if(gameList.length === 0){
-            const fetchedGames = await getGameList();
-            setGameList(fetchedGames);
-        }
-        
-    };
-
-    useEffect(() => {
-        fetchGameList();
-    }, []);
 
     const filteredGameList = gameList.filter((game) =>
         game.name.toLowerCase().includes(searchedGame.toLowerCase())
@@ -48,8 +36,19 @@ export default function GameList (props: IGameListProps) {
                     {game.id}
                     </Card.Text>
                     <div className={styles.btnContainer}>
-                        <Button variant="primary">Show more</Button>
-                        <Button variant="primary">Add to list</Button>
+                        <Button  
+                        className={styles.btn}
+                        >
+                            <span className={styles.btnTxt}>
+                                    Show more
+                            </span>
+                        </Button>
+                        <Button className={styles.btn}> 
+                            <span 
+                            className={styles.btnTxt}>
+                                Add to list
+                            </span>
+                        </Button>
                     </div>
                     
                 </Card.Body>

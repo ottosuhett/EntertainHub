@@ -106,7 +106,7 @@ export default function LoginWindow (props: ILoginWindowProps) {
 
   }
   return (
-    <Container fluid className={styles.mainContainer}>
+    <div className={styles.mainContainer}>
       <div className={styles.leftContainer}>
         <div></div>
         {openRegister ? 
@@ -175,6 +175,6 @@ export default function LoginWindow (props: ILoginWindowProps) {
         </div>
         
       </div>
-    </Container>
+    </div>
   );
 }

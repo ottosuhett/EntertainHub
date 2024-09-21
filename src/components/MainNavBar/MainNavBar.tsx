@@ -10,7 +10,7 @@ export default function MainNavBar (props: IMainNavBarProps) {
     const {selectedNavBar,setSelectedNavBar} = useContext(MainContext)
     return(
        
-            <Navbar bg="dark" data-bs-theme="dark">
+            <Navbar  className={styles.NavBar}>
                 <Container fluid className={styles.mainContainer}>
                     <div className={styles.mainNavBrand}>
                         <Image
@@ -18,7 +18,6 @@ export default function MainNavBar (props: IMainNavBarProps) {
                         src="/images/logo.png"
                         width="100"
                         height="100"
-                        //className="d-inline-block align-top"
                         className={styles.logo}
                         />{' '}
                         <Navbar.Brand className={styles.brandTitle}>Entertainhub</Navbar.Brand>

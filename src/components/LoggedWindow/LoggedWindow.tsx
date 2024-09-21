@@ -1,3 +1,4 @@
+"use client"
 import React, {useState,useContext, useEffect} from "react";
 import styles from "./LoggedWindow.module.scss"
 import { MainContext } from "@/app/context/MainContext";
@@ -8,6 +9,8 @@ import Image from "next/image";
 import GameList from "../GameList/GameList";
 import InputControl from "../InputControl/InputControl";
 import SearchContent from "../SearchContent/SearchContent";
+import HomePage from "../Home/HomePage";
+
 
 export interface ILoggedWindowProps {
 }
@@ -31,9 +34,13 @@ export default function LoggedWindow (props: ILoggedWindowProps) {
     return(
         <Container fluid className={styles.mainContainer}>
             <MainNavBar />
+            {
+                selectedNavBar === "Home" &&
+                <HomePage/>
+            }  
             {selectedNavBar === "Search" &&
                 <SearchContent />
-            }  
+            }
         </Container>
     )
 }
