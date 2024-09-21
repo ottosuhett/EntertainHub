@@ -106,4 +106,14 @@
     }
     
 }
-
+@media(max-width:990px){
+    .mainContainer{
+        flex-direction: column;
+        .leftContainer,.rightContainer{
+            width: 100%;
+        }
+        .leftContainer{
+            min-height: 50vh;
+        }
+    }
+}

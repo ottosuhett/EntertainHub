@@ -162,7 +162,11 @@ export default function LoginWindow (props: ILoginWindowProps) {
             <p className={styles.registerMsg}>Don't have an account, 
               <Button 
                 className={styles.registerLink}
-                onClick={()=>setOpenRegister(!openRegister)}
+                onClick={()=>{
+                  setOpenRegister(!openRegister)
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  
+                }}
               >
                   register now
             </Button>
