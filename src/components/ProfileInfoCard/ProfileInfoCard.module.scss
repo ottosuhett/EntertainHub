@@ -1,0 +1,44 @@
+@import "../../app/variableStyle/variables.scss";
+.mainContainer{
+    border: 1px solid $lightTextColor;
+    border-radius: 10px;
+    max-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.4rem;
+    .header{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        .userAvatar{
+            border: 0.3px solid #fff;
+            border-radius: 35px;
+        }
+    }
+    .label{
+        font-size: 1.8rem;
+        color: #fff;
+    }
+    .infoTxt{
+        font-size: 1.5rem;
+        color: #fff;
+        margin-left: 1rem;
+    }
+    .body{
+        display: flex; 
+        flex-direction: column;
+    }
+    .btn{
+        background-color: $darkTextColor;
+        border-color: transparent;
+        &:hover{
+            background-color: $darkTextColor;
+            border-color: transparent;
+        }
+    }
+    
+}

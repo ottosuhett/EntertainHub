@@ -19,6 +19,8 @@ export interface MainContextType {
     setGameList:React.Dispatch<React.SetStateAction<Game[]>>
     searchedGame:string,
     setSearchedGame:React.Dispatch<React.SetStateAction<string>>
+    loggedUser:string;
+    setLoggedUser:React.Dispatch<React.SetStateAction<string>>
 }
 
 export const MainContext = React.createContext<MainContextType>({
@@ -31,7 +33,9 @@ export const MainContext = React.createContext<MainContextType>({
     gameList:[],
     setGameList:()=>{},
     searchedGame:"",
-    setSearchedGame:()=>{}
+    setSearchedGame:()=>{},
+    loggedUser:"",
+    setLoggedUser:()=>{}
 });
 
 

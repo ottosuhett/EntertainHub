@@ -8,7 +8,7 @@ export interface ILoginWindowProps {
 }
 
 export default function LoginWindow (props: ILoginWindowProps) {
-  const {isLogged,setIsLogged} = useContext(MainContext)
+  const {isLogged,setIsLogged,loggedUser,setLoggedUser} = useContext(MainContext)
   const [openRegister, setOpenRegister] = useState<boolean>(false)
   const [newUsername, setNewUsername] = useState<string>("")
   const [newPassword,setNewPassword] = useState<string>("")
@@ -85,6 +85,7 @@ export default function LoginWindow (props: ILoginWindowProps) {
         if (response.ok) {
           alert('Login successful');
           setIsLogged(true)
+          setLoggedUser(userName)
         } else {
           alert(data.error);
         }

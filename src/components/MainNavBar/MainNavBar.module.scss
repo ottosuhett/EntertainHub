@@ -1,7 +1,4 @@
 @import "../../app/variableStyle/variables.scss";
-.NavBar{
-    background-color: transparent !important;
-}
 .mainContainer{
     width: 100%;
     display: flex;
@@ -9,6 +6,7 @@
     align-items: center;
     background-color: transparent !important;
     .mainNavBrand{
+        background-color: transparent !important;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -25,6 +23,7 @@
     }
     .navLinkITem{
         font-size: 2.5rem;
+        text-decoration: none;
         &:hover{
             cursor: pointer;
             color: $primaryBtbColor !important;
@@ -42,6 +41,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        background-color: transparent;
         .brandTitle{
             font-size: 2rem
         }

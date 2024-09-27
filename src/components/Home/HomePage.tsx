@@ -6,6 +6,8 @@ import Carousel from 'react-bootstrap/Carousel';
 import styles from "./HomePage.module.scss"
 import { getGameList } from '@/app/functions/genericFunctions';
 import Image from 'next/image';
+import ProfileInfoCard from '../ProfileInfoCard/ProfileInfoCard';
+import MainNavBar from '../MainNavBar/MainNavBar';
 export interface IHomePageProps {
 }
 
@@ -32,7 +34,7 @@ export default function HomePage (props: IHomePageProps) {
       };
       
       return (
-        <Container fluid>
+        <Container fluid className={styles.mainContainer}>
           <div className={styles.header}>
             <p className={styles.title}>Welcome to EntertainHub</p>
           </div>
@@ -55,6 +57,7 @@ export default function HomePage (props: IHomePageProps) {
               ))}
             </Carousel>
           )}
+          <ProfileInfoCard />
         </Container>
       );
     }

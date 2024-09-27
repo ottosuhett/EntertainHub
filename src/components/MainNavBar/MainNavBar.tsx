@@ -1,16 +1,19 @@
+"use client"
 import React, {useState,useContext, useEffect} from "react";
 import styles from "./MainNavBar.module.scss"
 import { MainContext } from "@/app/context/MainContext";
 import {Form, Button,Container,Nav,Navbar} from 'react-bootstrap';
 import Image from "next/image";
+import Link from "next/link";
 export interface IMainNavBarProps {
 }
 
 export default function MainNavBar (props: IMainNavBarProps) {
-    const {selectedNavBar,setSelectedNavBar} = useContext(MainContext)
+    const {selectedNavBar,setSelectedNavBar,isLogged} = useContext(MainContext)
     return(
-       
-            <Navbar  className={styles.NavBar}>
+        <>
+            { isLogged ?
+            <Navbar  className={`${styles.NavBar} bg-transparent`}>
                 <Container fluid className={styles.mainContainer}>
                     <div className={styles.mainNavBrand}>
                         <Image
@@ -23,25 +26,29 @@ export default function MainNavBar (props: IMainNavBarProps) {
                         <Navbar.Brand className={styles.brandTitle}>Entertainhub</Navbar.Brand>
                     </div>
                     <Nav className={styles.navItemsDiv}>
-                        <Nav.Link 
+                        <Link 
                         className={`${selectedNavBar === "Home" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}
-                        onClick={()=>setSelectedNavBar("Home")}
+                        href="/home"
                         >
                             Home
-                        </Nav.Link>
-                        <Nav.Link className={`${selectedNavBar === "Search" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}
-                        onClick={()=>setSelectedNavBar("Search")}
+                        </Link>
+                       
+                        <Link className={`${selectedNavBar === "Search" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}
+                        href="/search"
                         >
                             Search
-                        </Nav.Link>
-                        <Nav.Link className={`${selectedNavBar === "MyList" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}
-                        onClick={()=>setSelectedNavBar("MyList")}
+                        </Link>
+                        <Link className={`${selectedNavBar === "MyList" ? styles.selectedNav:styles.unselectedNav} ${styles.navLinkITem}`}
+                        href="/myList"
                         >
                             MyList
-                        </Nav.Link>
+                        </Link>
                     </Nav>
                 </Container>
-            </Navbar>
+            </Navbar>:null
         
+    }
+    </>
     )
+    
 }
