@@ -3,6 +3,7 @@ import React from 'react';
 import SearchContent from '@/components/SearchContent/SearchContent';
 import styles from "./page.module.scss"
 import MainNavBar from '@/components/MainNavBar/MainNavBar';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export interface ISearchProps {
 }

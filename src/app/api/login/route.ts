@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import sqlite3 from 'sqlite3';
 import  {openDb} from "../../lib/db"
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 interface User {
   id: number;
@@ -19,7 +20,7 @@ const getUser = async (db: sqlite3.Database, username: string): Promise<User | u
     });
   });
 };
-
+const secretKey = process.env.JWT_SECRET || 'myVeryStrongSecretKey';
 export async function POST(request: NextRequest) {
   const { username, password } = await request.json();
 
@@ -29,8 +30,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const db = openDb();
-    
-    // a função getUser busca o usuário com uma promise
+    // buscu o user com uma promise
     const user = await getUser(db, username);
 
     if (!user) {
@@ -40,7 +40,10 @@ export async function POST(request: NextRequest) {
     const match = await bcrypt.compare(password, user.password);
 
     if (match) {
-      return NextResponse.json({ message: 'Login successful' });
+      // Gera o token JWT
+      const token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '1h' });
+      // Envio o token de volta para o front
+      return NextResponse.json({ message: 'Login successful', token });
     } else {
       return NextResponse.json({ error: 'Incorrect password' }, { status: 401 });
     }

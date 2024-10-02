@@ -83,6 +83,11 @@ export default function LoginWindow (props: ILoginWindowProps) {
         const data = await response.json();
   
         if (response.ok) {
+          // Armazeno o token no localStorage
+          localStorage.setItem('token', data.token);
+          // Armazeno o user logado no localStorage
+          localStorage.setItem('loggedUser', userName);
+
           alert('Login successful');
           setIsLogged(true)
           setLoggedUser(userName)
