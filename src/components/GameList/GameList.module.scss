@@ -46,7 +46,7 @@
         align-items: center;
         margin-top: auto;
         .btn{
-            background-color: $darkTextColor;
+            background-color: $darkTextColor !important;
             width:7rem;
             border-color: transparent !important;
             &:hover{

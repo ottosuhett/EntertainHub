@@ -8,6 +8,10 @@ export interface Game {
     background_image: string;
     rating: number;
 }
+export interface UserListGroup {
+    listName: string;
+    list: Game[];
+}
 export interface MainContextType {
     isLogged: boolean;
     setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,6 +25,10 @@ export interface MainContextType {
     setSearchedGame:React.Dispatch<React.SetStateAction<string>>
     loggedUser:string;
     setLoggedUser:React.Dispatch<React.SetStateAction<string>>
+    userList:Game[],
+    setUserList:React.Dispatch<React.SetStateAction<Game[]>>,
+    userListGroup: UserListGroup[];
+    setUserListGroup: React.Dispatch<React.SetStateAction<UserListGroup[]>>;
 }
 
 export const MainContext = React.createContext<MainContextType>({
@@ -35,7 +43,11 @@ export const MainContext = React.createContext<MainContextType>({
     searchedGame:"",
     setSearchedGame:()=>{},
     loggedUser:"",
-    setLoggedUser:()=>{}
+    setLoggedUser:()=>{},
+    userList:[],
+    setUserList:()=>{},
+    userListGroup: [],
+    setUserListGroup: () => {},
 });
 
 
