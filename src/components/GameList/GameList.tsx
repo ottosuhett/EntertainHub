@@ -1,9 +1,10 @@
 import React,{useContext, useEffect, useState} from 'react';
 import { MainContext,UserListGroup,Game } from "@/app/context/MainContext";
-import {Form, Button,Container,Row,Col,Card,Dropdown,DropdownButton} from 'react-bootstrap';
-import { getGameList } from "@/app/functions/genericFunctions";
-import ButtonComp from '../Btns/ButtonComp';
+import {Form, Button,Card,Dropdown,DropdownButton} from 'react-bootstrap';
+import {handleOpenModal} from "@/app/functions/genericFunctions"
 import styles from "./GameList.module.scss"
+import ModalComp from '../ModalComp/ModalComp';
+
 export interface IGameListProps {
 }
 
@@ -11,7 +12,7 @@ export default function GameList (props: IGameListProps) {
     const {gameList, setGameList,searchedGame,userList, setUserList,userListGroup,setUserListGroup} = useContext(MainContext)
 
     const [newListName, setNewListName] = useState<string>('');
-
+    const [openCreateListmodal, setOpenCreateListmodal ] = useState(false)
     const filteredGameList = gameList.filter((game) =>
         game.name.toLowerCase().includes(searchedGame.toLowerCase())
     );
@@ -69,7 +70,7 @@ export default function GameList (props: IGameListProps) {
                       </Dropdown.Item>
                     ))}
                     <Dropdown.Divider />
-                    <Dropdown.Item onClick={() => createNewList(game)}>
+                    <Dropdown.Item onClick={() => handleOpenModal(setOpenCreateListmodal)}>
                       Create new list
                     </Dropdown.Item>
                   </DropdownButton>
@@ -80,7 +81,28 @@ export default function GameList (props: IGameListProps) {
         ) : (
           <p>Carregando jogos...</p>
         )}
+        {<ModalComp 
+        title='Create List' 
+        state={openCreateListmodal} 
+        setState={setOpenCreateListmodal}
+        confirmBtnTxt='Create'
+        closeBtnTxt='Cancel'
+        >
+        <p className={styles.txt}>{newListName}</p>
+        <Form>
+          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            <Form.Label className={styles.labelTxt}>List name</Form.Label>
+            <Form.Control 
+            type="text" 
+            placeholder="Digite o nome da lista" 
+            onChange={(e)=>setNewListName(e.target.value)}
+            />
+          </Form.Group>
+        </Form>
+
+      </ModalComp>}
       </div>
+      
     );
   }
 

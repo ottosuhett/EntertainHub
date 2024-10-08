@@ -1,0 +1,27 @@
+@import "../../app/variableStyle/variables.scss";
+
+.GameListContainer{
+    flex-grow: 1;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.inputContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mainContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-top: 8rem;
+}
+.errorMsg{
+    font-size: 1.6rem;
+    color: #FFF;
+}

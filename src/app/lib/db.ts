@@ -5,14 +5,26 @@ export const openDb = (): sqlite3.Database => {
   const db = new sqlite3.Database('./users.db');
 
   db.serialize(() => {
-    // Cria a tabela se não existir
+    // Cria a tabela 'users' se não existir
     db.run(
       'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)',
       (err) => {
         if (err) {
-          console.error('Error creating table:', err.message);
+          console.error('Error creating table "users":', err.message);
         } else {
           console.log('Table "users" is ready.');
+        }
+      }
+    );
+
+    // Cria a tabela 'userListGroups' se não existir
+    db.run(
+      'CREATE TABLE IF NOT EXISTS userListGroups (user TEXT PRIMARY KEY, listGroup TEXT)',
+      (err) => {
+        if (err) {
+          console.error('Error creating table "userListGroups":', err.message);
+        } else {
+          console.log('Table "userListGroups" is ready.');
         }
       }
     );
