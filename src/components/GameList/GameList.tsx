@@ -9,7 +9,7 @@ export interface IGameListProps {
 }
 
 export default function GameList (props: IGameListProps) {
-    const {gameList, setGameList,searchedGame,userList, setUserList,userListGroup,setUserListGroup} = useContext(MainContext)
+    const {gameList, setGameList,searchedGame,userList, setUserList,userListGroup,setUserListGroup,loggedUser} = useContext(MainContext)
 
     const [newListName, setNewListName] = useState<string>('');
     const [openCreateListmodal, setOpenCreateListmodal ] = useState(false)
@@ -18,7 +18,8 @@ export default function GameList (props: IGameListProps) {
     );
 
     const listToRender = searchedGame.length > 0 ? filteredGameList : gameList
-    
+    const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+
     const addGameToExistingList = (listName: string, game: Game) => {
       const updatedGroups = userListGroup.map((group) => {
         if (group.listName === listName) {
@@ -30,13 +31,55 @@ export default function GameList (props: IGameListProps) {
     };
   
     // Função para criar uma nova lista com o jogo
-    const createNewList = (game: Game) => {
+    // const createNewList = (game: Game) => {
+    //   const newGroup: UserListGroup = {
+    //     listName: newListName,
+    //     list: [game],
+    //   };
+    //   setUserListGroup([...userListGroup, newGroup]);
+    //   setNewListName('');
+    // };
+    const createNewList = async (game: Game) => {
       const newGroup: UserListGroup = {
         listName: newListName,
         list: [game],
       };
-      setUserListGroup([...userListGroup, newGroup]);
-      setNewListName('');
+    
+      try {
+        // Obtém o token do localStorage
+        const token = localStorage.getItem('token');
+    
+        // Verifica se o token existe
+        if (!token) {
+          throw new Error('Usuário não autenticado');
+        }
+    
+        // Faz uma requisição POST para salvar a nova lista no banco de dados
+        const response = await fetch(`/api/list-group`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Passa o token no cabeçalho
+          },
+          body: JSON.stringify({ listName: newListName, games: [game], user: loggedUser }),
+        });
+    
+        if (!response.ok) {
+          throw new Error('Erro ao salvar a lista no banco de dados');
+        }
+    
+        // Atualiza o estado do contexto com a nova lista
+        setUserListGroup([...userListGroup, newGroup]);
+    
+        // Atualiza o localStorage com a nova lista
+        const updatedUserListGroup = [...userListGroup, newGroup];
+        localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(updatedUserListGroup));
+    
+        // Limpa o nome da nova lista
+        setNewListName('');
+      } catch (error) {
+        console.error('Erro ao criar a nova lista:', error);
+      }
     };
   
   
@@ -70,7 +113,10 @@ export default function GameList (props: IGameListProps) {
                       </Dropdown.Item>
                     ))}
                     <Dropdown.Divider />
-                    <Dropdown.Item onClick={() => handleOpenModal(setOpenCreateListmodal)}>
+                    <Dropdown.Item onClick={() => {
+                        setSelectedGame(game);
+                        handleOpenModal(setOpenCreateListmodal); 
+                    }}>
                       Create new list
                     </Dropdown.Item>
                   </DropdownButton>
@@ -87,6 +133,12 @@ export default function GameList (props: IGameListProps) {
         setState={setOpenCreateListmodal}
         confirmBtnTxt='Create'
         closeBtnTxt='Cancel'
+        onConfirm={() => {
+          if (selectedGame) {
+            createNewList(selectedGame); 
+          }
+          setOpenCreateListmodal(false);
+        }}
         >
         <p className={styles.txt}>{newListName}</p>
         <Form>

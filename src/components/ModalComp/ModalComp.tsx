@@ -10,6 +10,7 @@ export interface IModalCompProps {
     confirmBtnTxt:string;
     state:boolean;
     setState:React.Dispatch<React.SetStateAction<boolean>>
+    onConfirm: () => void;
 }
 
 export default function ModalComp (props: IModalCompProps) {
@@ -27,7 +28,11 @@ export default function ModalComp (props: IModalCompProps) {
           <Button variant="secondary" onClick={()=>handleCloseModal(props.setState)}>
             {props.closeBtnTxt}
           </Button>
-          <Button variant="primary" onClick={()=>handleCloseModal(props.setState)}>
+          <Button variant="primary" onClick={()=>{
+            handleCloseModal(props.setState)
+            props.onConfirm()
+          }
+            }>
             {props.confirmBtnTxt}
           </Button>
         </Modal.Footer>

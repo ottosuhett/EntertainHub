@@ -54,3 +54,45 @@ export async function GET(request: NextRequest) {
     }
   }
 }
+
+export async function POST(request: NextRequest) {
+  const { listName, games, user } = await request.json();
+
+  if (!listName || !games || !user) {
+    return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
+  }
+
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader) {
+    return NextResponse.json({ error: 'No token provided' }, { status: 401 });
+  }
+  const token = authHeader.split(' ')[1];
+
+  try {
+    jwt.verify(token, secretKey);
+    const db = openDb();
+    await new Promise<void>((resolve, reject) => {
+      const listGroupString = JSON.stringify(games);
+      db.run(
+        'INSERT INTO userListGroups (user, listName, listGroup) VALUES (?, ?, ?)',
+        [user, listName, listGroupString],
+        (err) => {
+          if (err) {
+            console.error('Erro ao salvar a lista:', err.message);
+            reject(err);
+          } else {
+            resolve();
+          }
+        }
+      );
+    });
+
+    return NextResponse.json({ message: 'List created successfully' }, { status: 201 });
+  } catch (error) {
+    console.error('Erro ao processar a solicitação:', error);
+    if (error instanceof jwt.JsonWebTokenError) {
+      return NextResponse.json({ error: 'Invalid or missing token' }, { status: 401 });
+    }
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

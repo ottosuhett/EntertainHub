@@ -19,7 +19,12 @@ export const openDb = (): sqlite3.Database => {
 
     // Cria a tabela 'userListGroups' se não existir
     db.run(
-      'CREATE TABLE IF NOT EXISTS userListGroups (user TEXT PRIMARY KEY, listGroup TEXT)',
+      `CREATE TABLE IF NOT EXISTS userListGroups (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user TEXT NOT NULL,
+        listName TEXT NOT NULL,
+        listGroup TEXT NOT NULL
+      )`,
       (err) => {
         if (err) {
           console.error('Error creating table "userListGroups":', err.message);
