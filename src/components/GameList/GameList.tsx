@@ -20,25 +20,56 @@ export default function GameList (props: IGameListProps) {
     const listToRender = searchedGame.length > 0 ? filteredGameList : gameList
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
-    const addGameToExistingList = (listName: string, game: Game) => {
+    const addGameToExistingList = async (listName: string, game: Game) => {
+      // Salva o estado atual antes de modifcar
+      const previousUserListGroup = [...userListGroup];
+    
       const updatedGroups = userListGroup.map((group) => {
         if (group.listName === listName) {
           return { ...group, list: [...group.list, game] };
         }
         return group;
       });
+    
       setUserListGroup(updatedGroups);
+    
+      try {
+        const token = localStorage.getItem('token');
+    
+        if (!token) {
+          throw new Error('Usuário não autenticado');
+        }
+    
+        // atualizaa lista no banco de dados
+        const response = await fetch(`/api/list-group`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            listName,
+            games: updatedGroups.find((group) => group.listName === listName)?.list,
+            user: loggedUser,
+          }),
+        });
+    
+        if (!response.ok) {
+          throw new Error('Erro ao atualizar a lista no banco de dados');
+        }
+    
+        // Atualiza o localStorage com a nov lista
+        localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(updatedGroups));
+      } catch (error) {
+        console.error('Erro ao adicionar o jogo na lista existente:', error);
+    
+        setUserListGroup(previousUserListGroup);
+    
+        localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(previousUserListGroup));
+      }
     };
+    
   
-    // Função para criar uma nova lista com o jogo
-    // const createNewList = (game: Game) => {
-    //   const newGroup: UserListGroup = {
-    //     listName: newListName,
-    //     list: [game],
-    //   };
-    //   setUserListGroup([...userListGroup, newGroup]);
-    //   setNewListName('');
-    // };
     const createNewList = async (game: Game) => {
       const newGroup: UserListGroup = {
         listName: newListName,
@@ -46,10 +77,8 @@ export default function GameList (props: IGameListProps) {
       };
     
       try {
-        // Obtém o token do localStorage
         const token = localStorage.getItem('token');
     
-        // Verifica se o token existe
         if (!token) {
           throw new Error('Usuário não autenticado');
         }
@@ -81,8 +110,8 @@ export default function GameList (props: IGameListProps) {
         console.error('Erro ao criar a nova lista:', error);
       }
     };
-  
-  
+
+    
     return (
       <div className={listToRender.length < 9 ? styles.shortList : styles.gameList}>
         {gameList.length > 0 ? (

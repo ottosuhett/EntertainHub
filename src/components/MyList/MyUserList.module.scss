@@ -1,17 +1,24 @@
 @import "../../app/variableStyle/variables.scss";
 
-.GameListContainer{
-    flex-grow: 1;
-    padding: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+.gameListContainer {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  max-width: 100%;
+  max-height: 400px;
+  justify-content: center;
+  align-items: center;
 }
-.inputContainer{
+.listGroupContainer{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.listName{
+    font-size: 2rem;
+    color: #fff;
 }
 .mainContainer{
     display: flex;
@@ -19,9 +26,36 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    margin-top: 8rem;
 }
 .errorMsg{
-    font-size: 1.6rem;
-    color: #FFF;
+    font-size: 2rem;
+    color: #fff;
+    text-align: center;
+
+}
+.cardGame {
+  flex: 0 0 auto;
+  width: 250px;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.gameImg {
+  height: 150px;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .cardGame {
+    width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardGame {
+    width: 150px;
+  }
 }
