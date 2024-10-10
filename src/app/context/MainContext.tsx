@@ -7,6 +7,7 @@ export interface Game {
     released: string;
     background_image: string;
     rating: number;
+    description?: string; 
 }
 export interface UserListGroup {
     listName: string;

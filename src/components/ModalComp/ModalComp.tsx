@@ -2,7 +2,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { handleCloseModal } from '@/app/functions/genericFunctions';
-
+import styles from "./ModalComp.module.scss"
 export interface IModalCompProps {
     title:string;
     children?: React.ReactNode;
@@ -25,14 +25,22 @@ export default function ModalComp (props: IModalCompProps) {
         </Modal.Header>
         <Modal.Body>{props.children}</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={()=>handleCloseModal(props.setState)}>
+          <Button 
+          variant="secondary" 
+          onClick={()=>handleCloseModal(props.setState)}
+          className={styles.btn}
+          >
             {props.closeBtnTxt}
           </Button>
-          <Button variant="primary" onClick={()=>{
+          <Button 
+          variant="primary" 
+          onClick={()=>{
             handleCloseModal(props.setState)
             props.onConfirm()
           }
-            }>
+          }
+          className={styles.btn}
+          >
             {props.confirmBtnTxt}
           </Button>
         </Modal.Footer>

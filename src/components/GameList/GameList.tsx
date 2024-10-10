@@ -1,7 +1,7 @@
 import React,{useContext, useEffect, useState} from 'react';
 import { MainContext,UserListGroup,Game } from "@/app/context/MainContext";
 import {Form, Button,Card,Dropdown,DropdownButton} from 'react-bootstrap';
-import {handleOpenModal} from "@/app/functions/genericFunctions"
+import {handleOpenModal,handleCloseModal} from "@/app/functions/genericFunctions"
 import styles from "./GameList.module.scss"
 import ModalComp from '../ModalComp/ModalComp';
 
@@ -19,6 +19,15 @@ export default function GameList (props: IGameListProps) {
 
     const listToRender = searchedGame.length > 0 ? filteredGameList : gameList
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+    const [openShowMoreModal, setOpenShowMoreModal] = useState(false);
+    const [cachedGames, setCachedGames] = useState<{ [key: number]: Game }>({});
+
+    useEffect(() => {
+      const cached = localStorage.getItem('cachedGames');
+      if (cached) {
+        setCachedGames(JSON.parse(cached));
+      }
+    }, []);
 
     const addGameToExistingList = async (listName: string, game: Game) => {
       // Salva o estado atual antes de modifcar
@@ -88,7 +97,7 @@ export default function GameList (props: IGameListProps) {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Passa o token no cabeçalho
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ listName: newListName, games: [game], user: loggedUser }),
         });
@@ -111,6 +120,33 @@ export default function GameList (props: IGameListProps) {
       }
     };
 
+    const handleShowMore = async (game: Game) => {
+      if (cachedGames[game.id]) {
+        setSelectedGame(cachedGames[game.id]);
+        setOpenShowMoreModal(true);
+        return;
+      }
+    
+      const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+      const gameDetailsUrl = `https://api.rawg.io/api/games/${game.id}?key=${API_KEY}`;
+      
+      try {
+        const response = await fetch(gameDetailsUrl);
+        const gameDetails = await response.json();
+        
+        const gameWithDetails = { ...game, description: gameDetails.description_raw };
+        const updatedCache = { ...cachedGames, [game.id]: gameWithDetails };
+        
+        setCachedGames(updatedCache);
+        localStorage.setItem('cachedGames', JSON.stringify(updatedCache)); 
+    
+        setSelectedGame(gameWithDetails);
+        setOpenShowMoreModal(true);
+      } catch (error) {
+        console.error('Erro ao buscar detalhes do jogo:', error);
+      }
+    };
+    
     
     return (
       <div className={listToRender.length < 9 ? styles.shortList : styles.gameList}>
@@ -126,7 +162,7 @@ export default function GameList (props: IGameListProps) {
                 <Card.Title className={styles.gameName}>{game.name}</Card.Title>
                 <Card.Text>{game.id}</Card.Text>
                 <div className={styles.btnContainer}>
-                <Button className={styles.btn}>
+                <Button className={styles.btn} onClick={() => handleShowMore(game)}>
                   <span className={styles.btnTxt}>Show more</span>
                 </Button>
                   <DropdownButton
@@ -182,6 +218,23 @@ export default function GameList (props: IGameListProps) {
         </Form>
 
       </ModalComp>}
+
+      {/* Modal "Show More" */}
+      {selectedGame && (
+        <ModalComp
+          title={selectedGame.name}
+          state={openShowMoreModal}
+          setState={setOpenShowMoreModal}
+          confirmBtnTxt='Ok'
+          closeBtnTxt='Close'
+          onConfirm={()=>{handleCloseModal(setOpenShowMoreModal)}}
+
+        >
+          <Card.Img variant="top" src={selectedGame.background_image} className={styles.gameImg} />
+          <p className={styles.gameName}>{selectedGame.name}</p>
+          <p className={styles.description}>{selectedGame.description || 'No description available'}</p> 
+        </ModalComp>
+      )}
       </div>
       
     );
