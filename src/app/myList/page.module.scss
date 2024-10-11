@@ -3,12 +3,14 @@
 .mainContainer {
     background-image: url('../../../public/images/dark_way_zoom_out.jpg');
     background-size: cover;
+    background-attachment: fixed; // adicionei pra impedir o zoom na bgimage
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
     padding: 3rem;
     overflow-y: auto;
+    min-height: 100vh;
   }
   
   .navBar {

@@ -8,6 +8,37 @@
   padding: 2rem;
 }
 
+.headerContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  .mainTitle{
+    font-size: 4rem;
+    color: $darkTextColor;
+  }
+  .infoIcon{
+    color: #fff;
+    font-size: 2rem;
+    &:hover{
+      cursor:pointer;
+      color: $darkTextColor;
+    }
+  }
+}
+
+.listHeaderContainer{
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  .closeFolderIcon,.openFolderIcon{
+    color: #fff;
+    font-size: 2.5rem;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+}
 .listGroupContainer {
   display: flex;
   flex-direction: column;
@@ -19,6 +50,18 @@
 .listName{
   font-size: 2rem;
   color: #fff;
+  &:hover{
+    cursor: pointer;
+  }
+}
+.noListContainer{
+  display: flex;
+  gap: 1rem;
+  .errorMsg {
+    font-size: 2rem;
+    color: #fff;
+    text-align: center;
+  }
 }
 .gameListContainer {
   display: flex;
@@ -27,12 +70,6 @@
   align-items: center;
   flex-wrap: wrap;  
   width: 100%;
-}
-
-.errorMsg {
-  font-size: 2rem;
-  color: #fff;
-  text-align: center;
 }
 .cardGame {
   flex: 0 0 auto;

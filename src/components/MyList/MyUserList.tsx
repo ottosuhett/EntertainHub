@@ -1,13 +1,25 @@
 "use client";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "@/app/context/MainContext";
 import { Container, Card } from "react-bootstrap";
 import styles from "./MyUserList.module.scss";
+import { BsFolderX,BsFolder,BsFolder2Open,BsInfoSquare } from "react-icons/bs";
+import TooltipComp from "../TooltipComp/TooltipComp";
 
 export interface IMyUserListProps {}
 
 export default function MyUserList(props: IMyUserListProps) {
   const { userListGroup, loggedUser, setUserListGroup } = useContext(MainContext);
+  
+  const [visibleLists, setVisibleLists] = useState<number[]>([]);
+
+  const toggleListVisibility = (index: number) => {
+    if (visibleLists.includes(index)) {
+      setVisibleLists(visibleLists.filter(i => i !== index)); 
+    } else {
+      setVisibleLists([...visibleLists, index]);
+    }
+  };
 
   useEffect(() => {
     const savedListGroup = localStorage.getItem(`${loggedUser}_listGroup`);
@@ -45,31 +57,48 @@ export default function MyUserList(props: IMyUserListProps) {
 
   return (
     <Container fluid className={styles.mainContainer}>
+      <div className={styles.headerContainer}>
+        <p className={styles.mainTitle}>Your Lists</p> 
+        <TooltipComp hoverMsg="To open a list click on one of them"/>
+      </div>
+      
       {userListGroup.length > 0 ? (
         userListGroup.map((group, idx) => (
           <div key={idx} className={styles.listGroupContainer}>
-            <h2 className={styles.listName}>{group.listName}</h2>
-            <div className={styles.gameListContainer}>
-              {group.list.map((game) => (
-                <Card className={styles.cardGame} key={game.id}>
-                  <Card.Img
-                    variant="top"
-                    src={game.background_image}
-                    className={styles.gameImg}
-                  />
-                  <Card.Body className={styles.cardBody}>
-                    <Card.Title className={styles.gameName}>
-                      {game.name}
-                    </Card.Title>
-                    <Card.Text>{game.released}</Card.Text>
-                  </Card.Body>
-                </Card>
-              ))}
+            <div className={styles.listHeaderContainer} onClick={() => toggleListVisibility(idx)}>
+              {visibleLists.includes(idx) ?<BsFolder2Open className={styles.closeFolderIcon}/>:<BsFolder className={styles.openFolderIcon}/>}
+              <h2 className={styles.listName}>
+                {group.listName}
+              </h2>
             </div>
+
+            {visibleLists.includes(idx) && (
+              <div className={styles.gameListContainer}>
+                {group.list.map((game) => (
+                  <Card className={styles.cardGame} key={game.id}>
+                    <Card.Img
+                      variant="top"
+                      src={game.background_image}
+                      className={styles.gameImg}
+                    />
+                    <Card.Body className={styles.cardBody}>
+                      <Card.Title className={styles.gameName}>
+                        {game.name}
+                      </Card.Title>
+                      <Card.Text>{game.released}</Card.Text>
+                    </Card.Body>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         ))
       ) : (
-        <p className={styles.errorMsg}>Você ainda não tem listas</p>
+        <div className={styles.noListContainer}>
+          <BsFolderX />
+          <p className={styles.errorMsg}>Você ainda não tem listas</p>
+        </div>
+        
       )}
     </Container>
   );

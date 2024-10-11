@@ -1,0 +1,18 @@
+@import "../../app/variableStyle/variables.scss";
+.infoIcon{
+    color: #fff;
+    font-size: 2rem;
+    &:hover{
+      cursor:pointer;
+      color: $darkTextColor;
+    }
+}
+.customTooltip {
+    background-color: $darkTextColor !important;
+    color: #fff;
+    font-size: 1.4rem !important;
+    padding: 5px;
+    border-radius: 5px;
+    max-width: 350px;     
+    text-align: center;
+  }
