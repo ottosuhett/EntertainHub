@@ -39,6 +39,25 @@
         text-decoration: none; 
         color: inherit;         
     }
+    .logoutContainer{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .doorIcon{
+            font-size: 3rem;
+            color: $darkTextColor;
+            &:hover{
+                cursor: pointer;
+                color: $primaryBtbColor !important;
+            }
+        }
+        .logout{
+            font-size: 1rem;
+            color: #fff;
+        }
+    }
+    
 }
 @media(max-width:$mediumWindowSize){
     .mainContainer{

@@ -5,6 +5,7 @@ import { MainContext } from "@/app/context/MainContext";
 import {Form, Button,Container,Nav,Navbar} from 'react-bootstrap';
 import Image from "next/image";
 import Link from "next/link";
+import { BsDoorOpen } from "react-icons/bs";
 import { useRouter } from 'next/navigation';
 
 export interface IMainNavBarProps {
@@ -65,6 +66,11 @@ export default function MainNavBar (props: IMainNavBarProps) {
                         >
                             MyList
                         </Link>
+                        <Nav.Item className={styles.logoutContainer}>
+                            <BsDoorOpen className={styles.doorIcon}/>
+                            <p className={styles.logout}>Logout</p>
+                        </Nav.Item>
+                   
                     </Nav>
                 </Container>
             </Navbar>:null
