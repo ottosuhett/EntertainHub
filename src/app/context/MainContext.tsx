@@ -30,6 +30,8 @@ export interface MainContextType {
     setUserList:React.Dispatch<React.SetStateAction<Game[]>>,
     userListGroup: UserListGroup[];
     setUserListGroup: React.Dispatch<React.SetStateAction<UserListGroup[]>>;
+    listCount: number;
+    setListCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const MainContext = React.createContext<MainContextType>({
@@ -49,6 +51,8 @@ export const MainContext = React.createContext<MainContextType>({
     setUserList:()=>{},
     userListGroup: [],
     setUserListGroup: () => {},
+    listCount:0,
+    setListCount:()=>{}
 });
 
 

@@ -1,5 +1,33 @@
+import { useRouter } from "next/router";
 
-import bcrypt from 'bcrypt';
+const isTokenExpired = (token: string) => {
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  const expiry = payload.exp * 1000; 
+  return Date.now() >= expiry;
+};
+export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  const token = localStorage.getItem('token');
+  const router = useRouter();
+
+  if (!token || isTokenExpired(token)) {
+    localStorage.removeItem('token'); 
+    router.push('/login'); 
+    return;
+  }
+
+  const authHeaders = {
+    Authorization: `Bearer ${token}`,
+    ...(options.headers || {}), 
+  };
+
+  const response = await fetch(url, {
+    ...options,
+    headers: authHeaders, 
+  });
+
+  return response;
+};
+
   export const handleOpenModal=(setState:React.Dispatch<React.SetStateAction<boolean>>)=>{
   setState(true)
   }

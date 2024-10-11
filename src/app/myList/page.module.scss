@@ -1,14 +1,21 @@
 @import "../../app/variableStyle/variables.scss";
 
-.mainContainer{
-    height: 100vh;
+.mainContainer {
     background-image: url('../../../public/images/dark_way_zoom_out.jpg');
-    //background-size: 100%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     padding: 3rem;
-}
+    overflow-y: auto;
+  }
+  
+  .navBar {
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+  
+  
