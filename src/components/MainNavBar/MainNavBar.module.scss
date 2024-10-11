@@ -35,6 +35,10 @@
     .unselectedNav{
         color: $unselectedNavColor !important;
     }
+    .navLinkNoStyle {
+        text-decoration: none; 
+        color: inherit;         
+    }
 }
 @media(max-width:$mediumWindowSize){
     .mainContainer{

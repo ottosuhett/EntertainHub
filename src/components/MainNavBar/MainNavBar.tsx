@@ -33,6 +33,7 @@ export default function MainNavBar (props: IMainNavBarProps) {
             <Navbar  className={`${styles.NavBar} bg-transparent`}>
                 <Container fluid className={styles.mainContainer}>
                     <div className={styles.mainNavBrand}>
+                    <Link href="/home" className={styles.navLinkNoStyle} onClick={()=>setSelectedNavBar("Home")}>
                         <Image
                         alt=""
                         src="/images/logo.png"
@@ -41,6 +42,7 @@ export default function MainNavBar (props: IMainNavBarProps) {
                         className={styles.logo}
                         />{' '}
                         <Navbar.Brand className={styles.brandTitle}>Entertainhub</Navbar.Brand>
+                    </Link>
                     </div>
                     <Nav className={styles.navItemsDiv}>
                         <Link 
