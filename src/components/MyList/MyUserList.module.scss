@@ -85,6 +85,28 @@
   height: 150px;
   object-fit: cover;
 }
+.cardBody{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .gameName{
+    font-size: 1rem;
+  }
+  .rating{
+    font-size: 1rem;
+  }
+  .btn{
+    background-color: $darkTextColor !important;
+    width:7rem;
+    border-color: transparent !important;
+    &:hover{
+        cursor: pointer;
+    }
+  }
+  .btnTxt{
+    font-size: 0.8rem;
+  }
+}
 
 @media (max-width: 768px) {
   .cardGame {

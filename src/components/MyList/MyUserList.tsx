@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "@/app/context/MainContext";
-import { Container, Card } from "react-bootstrap";
+import { Container, Card ,Button} from "react-bootstrap";
 import styles from "./MyUserList.module.scss";
 import { BsFolderX,BsFolder,BsFolder2Open,BsInfoSquare } from "react-icons/bs";
 import TooltipComp from "../TooltipComp/TooltipComp";
@@ -82,10 +82,16 @@ export default function MyUserList(props: IMyUserListProps) {
                       className={styles.gameImg}
                     />
                     <Card.Body className={styles.cardBody}>
-                      <Card.Title className={styles.gameName}>
-                        {game.name}
-                      </Card.Title>
-                      <Card.Text>{game.released}</Card.Text>
+                      <span>
+                        <Card.Title className={styles.gameName}>
+                          {game.name}
+                        </Card.Title>
+                        <Card.Text className={styles.rating}>Rating:{game.rating}</Card.Text>
+                      </span>
+                     <Button className={styles.btn}>
+                      <span className={styles.btnTxt}>Details..</span>
+                     </Button>
+                      
                     </Card.Body>
                   </Card>
                 ))}
