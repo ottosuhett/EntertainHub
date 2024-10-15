@@ -27,7 +27,14 @@ export default function MainNavBar (props: IMainNavBarProps) {
         setLoggedUser(savedUser);
     }
   }, [router,setIsLogged,setLoggedUser]);
-
+  
+    const handleLogout = () => {
+        setIsLogged(false);
+        setLoggedUser(''); 
+        localStorage.removeItem('token');
+        localStorage.removeItem('loggedUser');
+        router.push('/');
+    };
     return(
         <>
             { isLogged ?
@@ -66,8 +73,13 @@ export default function MainNavBar (props: IMainNavBarProps) {
                         >
                             MyList
                         </Link>
-                        <Nav.Item className={styles.logoutContainer}>
-                            <BsDoorOpen className={styles.doorIcon}/>
+                        <Nav.Item 
+                        className={styles.logoutContainer}
+                        onClick={handleLogout}
+                        >
+                            <BsDoorOpen 
+                            className={styles.doorIcon}
+                            />
                             <p className={styles.logout}>Logout</p>
                         </Nav.Item>
                    
