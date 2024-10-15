@@ -9,7 +9,7 @@ export interface IGameListProps {
 }
 
 export default function GameList (props: IGameListProps) {
-    const {gameList, setGameList,searchedGame,userList, setUserList,userListGroup,setUserListGroup,loggedUser} = useContext(MainContext)
+    const {gameList, setGameList,searchedGame,userList, setUserList,userListGroup,setUserListGroup,loggedUser,cachedGames, setCachedGames} = useContext(MainContext)
 
     const [newListName, setNewListName] = useState<string>('');
     const [openCreateListmodal, setOpenCreateListmodal ] = useState(false)
@@ -20,7 +20,7 @@ export default function GameList (props: IGameListProps) {
     const listToRender = searchedGame.length > 0 ? filteredGameList : gameList
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);
     const [openShowMoreModal, setOpenShowMoreModal] = useState(false);
-    const [cachedGames, setCachedGames] = useState<{ [key: number]: Game }>({});
+    // const [cachedGames, setCachedGames] = useState<{ [key: number]: Game }>({});
 
     useEffect(() => {
       const cached = localStorage.getItem('cachedGames');
@@ -28,9 +28,11 @@ export default function GameList (props: IGameListProps) {
         setCachedGames(JSON.parse(cached));
       }
     }, []);
+    useEffect(() => {
+      console.log("cachedGames atualizado:", cachedGames);
+    }, [cachedGames]);
 
     const addGameToExistingList = async (listName: string, game: Game) => {
-      // Salva o estado atual antes de modifcar
       const previousUserListGroup = [...userListGroup];
     
       const updatedGroups = userListGroup.map((group) => {
