@@ -1,18 +1,27 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { MainContext } from "@/app/context/MainContext";
+import { MainContext, Game } from "@/app/context/MainContext";
 import { Container, Card ,Button} from "react-bootstrap";
 import styles from "./MyUserList.module.scss";
 import { BsFolderX,BsFolder,BsFolder2Open,BsInfoSquare } from "react-icons/bs";
 import TooltipComp from "../TooltipComp/TooltipComp";
+import ModalComp from "../ModalComp/ModalComp";
 
 export interface IMyUserListProps {}
 
 export default function MyUserList(props: IMyUserListProps) {
-  const { userListGroup, loggedUser, setUserListGroup } = useContext(MainContext);
+  const { userListGroup, loggedUser, setUserListGroup ,cachedGames,setCachedGames} = useContext(MainContext);
   
   const [visibleLists, setVisibleLists] = useState<number[]>([]);
+  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  const [openShowMoreModal, setOpenShowMoreModal] = useState(false);
 
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const maxDescriptionLength = 150;
+  const handleToggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
   const toggleListVisibility = (index: number) => {
     if (visibleLists.includes(index)) {
       setVisibleLists(visibleLists.filter(i => i !== index)); 
@@ -55,6 +64,33 @@ export default function MyUserList(props: IMyUserListProps) {
     }
   }, [loggedUser, setUserListGroup]);
 
+  const handleShowDetails = async (game: Game) => {
+    if (cachedGames[game.id]) {
+      setSelectedGame(cachedGames[game.id]);
+      setOpenShowMoreModal(true);
+      return;
+    }
+
+    const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+    const gameDetailsUrl = `https://api.rawg.io/api/games/${game.id}?key=${API_KEY}`;
+    
+    try {
+      const response = await fetch(gameDetailsUrl);
+      const gameDetails = await response.json();
+      
+      const gameWithDetails = { ...game, description: gameDetails.description_raw };
+      const updatedCache = { ...cachedGames, [game.id]: gameWithDetails };
+      
+      setCachedGames(updatedCache);
+      localStorage.setItem('cachedGames', JSON.stringify(updatedCache));
+
+      setSelectedGame(gameWithDetails);
+      setOpenShowMoreModal(true);
+    } catch (error) {
+      console.error('Erro ao buscar detalhes do jogo:', error);
+    }
+  };
+
   return (
     <Container fluid className={styles.mainContainer}>
       <div className={styles.headerContainer}>
@@ -88,7 +124,10 @@ export default function MyUserList(props: IMyUserListProps) {
                         </Card.Title>
                         <Card.Text className={styles.rating}>Rating:{game.rating}</Card.Text>
                       </span>
-                     <Button className={styles.btn}>
+                     <Button 
+                     className={styles.btn}
+                     onClick={() => handleShowDetails(game)}
+                     >
                       <span className={styles.btnTxt}>Details..</span>
                      </Button>
                       
@@ -105,6 +144,55 @@ export default function MyUserList(props: IMyUserListProps) {
           <p className={styles.errorMsg}>Você ainda não tem listas</p>
         </div>
         
+      )}
+      {selectedGame && (
+        <ModalComp
+        title={selectedGame.name}
+        state={openShowMoreModal}
+        setState={setOpenShowMoreModal}
+        confirmBtnTxt='Ok'
+        closeBtnTxt='Close'
+        onConfirm={() => setOpenShowMoreModal(false)}
+      >
+        <Card.Img variant="top" src={selectedGame.background_image} className={styles.gameImgCard} />
+        <p className={styles.gameName}>{selectedGame.name}</p>
+    
+        <p className={styles.description}>
+          {showFullDescription
+            ? selectedGame.description
+            : `${selectedGame.description?.slice(0, maxDescriptionLength)}...`}
+          {selectedGame.description && selectedGame.description.length > 150 && (
+            <Button variant="link" className={styles.showMoreBtn} onClick={handleToggleDescription}>
+              {showFullDescription ? 'Show less' : 'Show more'}
+            </Button>
+          )}
+        </p>
+      
+        <p>
+          <strong className={styles.labelInfo}>Released:</strong> 
+          <span className={styles.gameInfo}>{selectedGame.released}</span>
+        </p>
+        <p>
+          <strong className={styles.labelInfo}>Metacritic Score:</strong> <span className={styles.gameInfo}>{selectedGame.metacritic || 'Not available'}</span>
+        </p>
+      
+        {selectedGame.platforms && selectedGame.platforms.length > 0 && (
+          <p>
+            <strong className={styles.labelInfo}>Available on:</strong> 
+            {selectedGame.platforms.map((platformObj, idx) => (
+              <span key={idx} className={styles.gameInfoPlataforms}>
+                {platformObj.platform.name}
+                {idx < (selectedGame.platforms?.length || 0) - 1 ? ', ' : ''}
+              </span>
+            ))}
+          </p>
+        )}
+        <p className={styles.gameInfo}>
+          <strong className={styles.labelInfo}>Rating:</strong>
+          <span className={styles.gameInfo}>{selectedGame.rating}</span>
+        </p>
+      </ModalComp>
+  
       )}
     </Container>
   );

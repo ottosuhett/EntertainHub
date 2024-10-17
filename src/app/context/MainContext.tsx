@@ -8,6 +8,8 @@ export interface Game {
     background_image: string;
     rating: number;
     description?: string; 
+    metacritic?:string;
+    platforms?: { platform: { name: string } }[];
 }
 export interface UserListGroup {
     listName: string;

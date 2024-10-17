@@ -107,7 +107,20 @@
     font-size: 0.8rem;
   }
 }
-
+.description{
+  font-size: 1rem;
+}
+.gameInfo{
+  font-size: 1.3rem;
+  margin-left: 0.3rem;
+}
+.gameInfoPlataforms{
+  font-size: 1.2rem;
+  padding-left: 0.3rem;
+}
+.labelInfo{
+  font-size: 1.2rem;
+}
 @media (max-width: 768px) {
   .cardGame {
     width: 180px;
