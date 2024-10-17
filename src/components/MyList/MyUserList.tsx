@@ -10,13 +10,14 @@ import ModalComp from "../ModalComp/ModalComp";
 export interface IMyUserListProps {}
 
 export default function MyUserList(props: IMyUserListProps) {
-  const { userListGroup, loggedUser, setUserListGroup ,cachedGames,setCachedGames} = useContext(MainContext);
+  const { userListGroup, loggedUser, setUserListGroup ,cachedGames,setCachedGames,gameList,setGameList} = useContext(MainContext);
   
   const [visibleLists, setVisibleLists] = useState<number[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [openShowMoreModal, setOpenShowMoreModal] = useState(false);
 
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [gameProgress, setGameProgress] = useState<{ [gameId: number]: number }>({});
 
   const maxDescriptionLength = 150;
   const handleToggleDescription = () => {
@@ -65,32 +66,50 @@ export default function MyUserList(props: IMyUserListProps) {
   }, [loggedUser, setUserListGroup]);
 
   const handleShowDetails = async (game: Game) => {
-    if (cachedGames[game.id]) {
-      setSelectedGame(cachedGames[game.id]);
+    const cachedGame = cachedGames[game.id];
+  
+    const savedProgress = localStorage.getItem(`gameProgress_${game.id}`);
+    const progress = savedProgress ? JSON.parse(savedProgress) : 0;
+  
+    if (cachedGame) {
+      setSelectedGame({ ...cachedGame, progress });
       setOpenShowMoreModal(true);
       return;
     }
-
+  
     const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
     const gameDetailsUrl = `https://api.rawg.io/api/games/${game.id}?key=${API_KEY}`;
     
     try {
       const response = await fetch(gameDetailsUrl);
       const gameDetails = await response.json();
-      
-      const gameWithDetails = { ...game, description: gameDetails.description_raw };
+  
+      const gameWithDetails = { ...game, description: gameDetails.description_raw, progress };
+  
       const updatedCache = { ...cachedGames, [game.id]: gameWithDetails };
-      
       setCachedGames(updatedCache);
       localStorage.setItem('cachedGames', JSON.stringify(updatedCache));
-
+  
       setSelectedGame(gameWithDetails);
       setOpenShowMoreModal(true);
     } catch (error) {
       console.error('Erro ao buscar detalhes do jogo:', error);
     }
   };
-
+  
+  const handleProgressChange = (gameId: number, newProgress: number) => {
+    setGameProgress((prevProgress) => ({
+      ...prevProgress,
+      [gameId]: newProgress,
+    }));
+  
+    localStorage.setItem(`gameProgress_${gameId}`, JSON.stringify(newProgress));
+  
+    if (selectedGame && selectedGame.id === gameId) {
+      setSelectedGame({ ...selectedGame, progress: newProgress });
+    }
+  };
+  
   return (
     <Container fluid className={styles.mainContainer}>
       <div className={styles.headerContainer}>
@@ -191,6 +210,19 @@ export default function MyUserList(props: IMyUserListProps) {
           <strong className={styles.labelInfo}>Rating:</strong>
           <span className={styles.gameInfo}>{selectedGame.rating}</span>
         </p>
+        <div className={styles.progressContainer}>
+          <label htmlFor="progressSlider">
+          <strong className={styles.labelInfo}>Game Progress:</strong> 
+          <span className={styles.gameInfo}>{selectedGame.progress || 0}%</span>
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={selectedGame?.progress || gameProgress[selectedGame?.id] || 0}
+            onChange={(e) => handleProgressChange(selectedGame?.id, parseInt(e.target.value))}
+          />
+      </div>
       </ModalComp>
   
       )}

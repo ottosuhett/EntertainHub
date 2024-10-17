@@ -10,6 +10,7 @@ export interface Game {
     description?: string; 
     metacritic?:string;
     platforms?: { platform: { name: string } }[];
+    progress?: number;
 }
 export interface UserListGroup {
     listName: string;
