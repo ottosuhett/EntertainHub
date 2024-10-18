@@ -14,7 +14,9 @@ export interface IHomePageProps {
 export default function HomePage (props: IHomePageProps) {
     const {gameList,setGameList} = useContext(MainContext)
     const [index, setIndex] = useState(0);
-    
+  
+    const gifUrl = "https://media.giphy.com/media/3lIgOk4Gjfptu/giphy.gif"
+    const gifUrl2 ="https://media.giphy.com/media/ViyksHC9lWPXov0kKM/giphy.gif"
     const fetchGameList = async () => {
         if(gameList.length === 0){
             const fetchedGames = await getGameList();
@@ -38,7 +40,7 @@ export default function HomePage (props: IHomePageProps) {
           <div className={styles.header}>
             <p className={styles.title}>Welcome to EntertainHub</p>
           </div>
-    
+
           {gameList.length > 0 && (
             <Carousel activeIndex={index} onSelect={handleSelect}>
               {gameList.map((game, idx) => (
@@ -57,7 +59,19 @@ export default function HomePage (props: IHomePageProps) {
               ))}
             </Carousel>
           )}
-          <ProfileInfoCard />
+          
+          <div className={styles.secondContainer}>
+            <div className={styles.profileCarContainer}>
+              <ProfileInfoCard />
+            </div>
+            <div className={styles.gifContainer}>
+              <img src={gifUrl} alt="Giphy Gif" style={{ width: "400px", height: 'auto' }} />
+            </div>
+            <div>
+              <img src={gifUrl2} alt="Giphy Gif" style={{ width: '250px', height: "auto" }} className={styles.gifPlayMore}/>
+            </div>
+          </div>
+          
         </Container>
       );
     }

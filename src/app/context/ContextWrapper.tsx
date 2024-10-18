@@ -15,8 +15,10 @@ export const MainContextProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [userListGroup,setUserListGroup] = useState<UserListGroup[]>([])
   const [listCount,setListCount] =useState<number>(0)
   const [cachedGames, setCachedGames] = useState<{ [key: number]: Game }>({});
+  const [totalUniqueGames,setTotalUniqueGames] = useState<number>(0)
+
   return (
-    <MainContext.Provider value={{isLogged, setIsLogged,user, setUser,selectedNavBar,setSelectedNavBar,gameList, setGameList,searchedGame, setSearchedGame,loggedUser,setLoggedUser,userList, setUserList, userListGroup,setUserListGroup,listCount,setListCount,cachedGames, setCachedGames}}>
+    <MainContext.Provider value={{isLogged, setIsLogged,user, setUser,selectedNavBar,setSelectedNavBar,gameList, setGameList,searchedGame, setSearchedGame,loggedUser,setLoggedUser,userList, setUserList, userListGroup,setUserListGroup,listCount,setListCount,cachedGames, setCachedGames,totalUniqueGames,setTotalUniqueGames}}>
       {children}
     </MainContext.Provider>
   );

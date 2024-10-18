@@ -2,13 +2,16 @@
 .mainContainer{
     border: 1px solid $lightTextColor;
     border-radius: 10px;
-    max-width: 20rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 4rem;
     padding: 0.4rem;
+    min-width: 210px;
+    height: 270px;
+    background-color: transparent;
+    
     .header{
         display: flex;
         justify-content: center;

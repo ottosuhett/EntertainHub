@@ -3,14 +3,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { MainContext, Game } from "@/app/context/MainContext";
 import { Container, Card ,Button} from "react-bootstrap";
 import styles from "./MyUserList.module.scss";
-import { BsFolderX,BsFolder,BsFolder2Open,BsInfoSquare } from "react-icons/bs";
+import { BsFolderX,BsFolder,BsFolder2Open } from "react-icons/bs";
 import TooltipComp from "../TooltipComp/TooltipComp";
 import ModalComp from "../ModalComp/ModalComp";
 
 export interface IMyUserListProps {}
 
 export default function MyUserList(props: IMyUserListProps) {
-  const { userListGroup, loggedUser, setUserListGroup ,cachedGames,setCachedGames,gameList,setGameList} = useContext(MainContext);
+  const { userListGroup, loggedUser, setUserListGroup ,cachedGames,setCachedGames} = useContext(MainContext);
   
   const [visibleLists, setVisibleLists] = useState<number[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
@@ -33,35 +33,46 @@ export default function MyUserList(props: IMyUserListProps) {
 
   useEffect(() => {
     const savedListGroup = localStorage.getItem(`${loggedUser}_listGroup`);
-
+    const savedGameProgress: { [key: number]: number } = {};
+  
+    userListGroup.forEach(group => {
+      group.list.forEach(game => {
+        const savedProgress = localStorage.getItem(`gameProgress_${game.id}`);
+        if (savedProgress) {
+          savedGameProgress[game.id] = JSON.parse(savedProgress);
+        }
+      });
+    });
+  
+    setGameProgress(savedGameProgress);
+  
     if (savedListGroup) {
       setUserListGroup(JSON.parse(savedListGroup));
     } else {
       const token = localStorage.getItem("token");
-
       fetch(`/api/list-group?user=${loggedUser}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data.listGroup) {
-            setUserListGroup(data.listGroup);
-            localStorage.setItem(
-              `${loggedUser}_listGroup`,
-              JSON.stringify(data.listGroup)
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Erro ao carregar o listGroup:", error);
-        });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.listGroup) {
+          setUserListGroup(data.listGroup);
+          localStorage.setItem(
+            `${loggedUser}_listGroup`,
+            JSON.stringify(data.listGroup)
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar o listGroup:", error);
+      });
     }
   }, [loggedUser, setUserListGroup]);
 
@@ -143,12 +154,18 @@ export default function MyUserList(props: IMyUserListProps) {
                         </Card.Title>
                         <Card.Text className={styles.rating}>Rating:{game.rating}</Card.Text>
                       </span>
-                     <Button 
-                     className={styles.btn}
-                     onClick={() => handleShowDetails(game)}
-                     >
-                      <span className={styles.btnTxt}>Details..</span>
-                     </Button>
+                      <span>
+                        <strong className={styles.labelInfo}>Progress</strong>   
+                          <p className={styles.gameProgressTxt}>
+                          {gameProgress[game.id] !== undefined ? gameProgress[game.id] : game.progress || "0"}%
+                            </p>
+                          <Button 
+                          className={styles.btn}
+                          onClick={() => handleShowDetails(game)}
+                          >
+                            <span className={styles.btnTxt}>Details..</span>
+                          </Button>
+                     </span>
                       
                     </Card.Body>
                   </Card>

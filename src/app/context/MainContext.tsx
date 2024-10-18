@@ -37,6 +37,8 @@ export interface MainContextType {
     setListCount: React.Dispatch<React.SetStateAction<number>>;
     cachedGames: { [key: number]: Game };
     setCachedGames: React.Dispatch<React.SetStateAction<{ [key: number]: Game }>>;
+    totalUniqueGames: number,
+    setTotalUniqueGames: React.Dispatch<React.SetStateAction<number>>,
 }
 
 export const MainContext = React.createContext<MainContextType>({
@@ -59,7 +61,9 @@ export const MainContext = React.createContext<MainContextType>({
     listCount:0,
     setListCount:()=>{},
     cachedGames:{},
-    setCachedGames:()=>{}
+    setCachedGames:()=>{},
+    totalUniqueGames:0,
+    setTotalUniqueGames:()=>{}
 });
 
 

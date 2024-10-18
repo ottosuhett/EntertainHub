@@ -9,7 +9,7 @@ export interface IGameListProps {
 }
 
 export default function GameList (props: IGameListProps) {
-    const {gameList, setGameList,searchedGame,userList, setUserList,userListGroup,setUserListGroup,loggedUser,cachedGames, setCachedGames} = useContext(MainContext)
+    const {gameList, setGameList,searchedGame,userList, setUserList,userListGroup,setUserListGroup,loggedUser,cachedGames, setCachedGames,totalUniqueGames,setTotalUniqueGames} = useContext(MainContext)
 
     const [newListName, setNewListName] = useState<string>('');
     const [openCreateListmodal, setOpenCreateListmodal ] = useState(false)
@@ -43,7 +43,7 @@ export default function GameList (props: IGameListProps) {
       });
     
       setUserListGroup(updatedGroups);
-    
+      updateTotalUniqueGames(updatedGroups);
       try {
         const token = localStorage.getItem('token');
     
@@ -110,7 +110,7 @@ export default function GameList (props: IGameListProps) {
     
         // Atualiza o estado do contexto com a nova lista
         setUserListGroup([...userListGroup, newGroup]);
-    
+        updateTotalUniqueGames([...userListGroup, newGroup]);
         // Atualiza o localStorage com a nova lista
         const updatedUserListGroup = [...userListGroup, newGroup];
         localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(updatedUserListGroup));
@@ -149,7 +149,15 @@ export default function GameList (props: IGameListProps) {
       }
     };
     
-    
+    const updateTotalUniqueGames = (updatedGroups: UserListGroup[]) => {
+      const uniqueGames = new Set<number>();
+      updatedGroups.forEach(group => {
+        group.list.forEach(game => {
+          uniqueGames.add(game.id);
+        });
+      });
+      setTotalUniqueGames(uniqueGames.size);
+    };
     return (
       <div className={listToRender.length < 9 ? styles.shortList : styles.gameList}>
         {gameList.length > 0 ? (
