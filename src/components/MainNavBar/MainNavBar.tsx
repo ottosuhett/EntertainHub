@@ -16,11 +16,10 @@ export default function MainNavBar (props: IMainNavBarProps) {
 
     const router = useRouter();
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Verifica se o token está no localStorage
+    const token = localStorage.getItem('token'); 
     const savedUser = localStorage.getItem('loggedUser') || '';
     if (!token) {
       setIsLogged(false);
-      // redireciono para o login
       router.push('/');
     }else{
         setIsLogged(true);
@@ -31,6 +30,7 @@ export default function MainNavBar (props: IMainNavBarProps) {
     const handleLogout = () => {
         setIsLogged(false);
         setLoggedUser(''); 
+        setSelectedNavBar("Home")
         localStorage.removeItem('token');
         localStorage.removeItem('loggedUser');
         router.push('/');
