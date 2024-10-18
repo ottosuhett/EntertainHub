@@ -154,17 +154,20 @@ export default function MyUserList(props: IMyUserListProps) {
                         </Card.Title>
                         <Card.Text className={styles.rating}>Rating:{game.rating}</Card.Text>
                       </span>
-                      <span>
-                        <strong className={styles.labelInfo}>Progress</strong>   
-                          <p className={styles.gameProgressTxt}>
-                          {gameProgress[game.id] !== undefined ? gameProgress[game.id] : game.progress || "0"}%
-                            </p>
+                      <span className={styles.rightContainer}>
+                          <div className={styles.progressBtnContainer}>
+                              <strong className={styles.progressLabel}>Progress: </strong>   
+                              <p className={styles.gameProgressTxt}>
+                              {gameProgress[game.id] !== undefined ? gameProgress[game.id] : game.progress || "0"}%
+                              </p>
+                          </div>
                           <Button 
                           className={styles.btn}
                           onClick={() => handleShowDetails(game)}
                           >
                             <span className={styles.btnTxt}>Details..</span>
                           </Button>
+                        
                      </span>
                       
                     </Card.Body>
