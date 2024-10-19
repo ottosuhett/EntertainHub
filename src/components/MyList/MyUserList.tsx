@@ -1,16 +1,16 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { MainContext, Game } from "@/app/context/MainContext";
+import { MainContext, Game,UserListGroup } from "@/app/context/MainContext";
 import { Container, Card ,Button} from "react-bootstrap";
 import styles from "./MyUserList.module.scss";
-import { BsFolderX,BsFolder,BsFolder2Open } from "react-icons/bs";
+import { BsFolderX,BsFolder,BsFolder2Open,BsTrash3Fill } from "react-icons/bs";
 import TooltipComp from "../TooltipComp/TooltipComp";
 import ModalComp from "../ModalComp/ModalComp";
 
 export interface IMyUserListProps {}
 
 export default function MyUserList(props: IMyUserListProps) {
-  const { userListGroup, loggedUser, setUserListGroup ,cachedGames,setCachedGames} = useContext(MainContext);
+  const { userListGroup, loggedUser, setUserListGroup ,cachedGames,setCachedGames,setTotalUniqueGames} = useContext(MainContext);
   
   const [visibleLists, setVisibleLists] = useState<number[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
@@ -62,7 +62,7 @@ export default function MyUserList(props: IMyUserListProps) {
   
     fetchProgressFromDB();
   }, [loggedUser]);
-  
+
   useEffect(() => {
     const savedListGroup = localStorage.getItem(`${loggedUser}_listGroup`);
     const savedGameProgress: { [key: number]: number } = {};
@@ -191,6 +191,42 @@ export default function MyUserList(props: IMyUserListProps) {
       console.error("Erro ao salvar o progresso:", error);
     }
   }
+  const updateTotalUniqueGames = (lists: UserListGroup[]) => {
+    const uniqueGames = new Set<number>();
+    
+    lists.forEach(group => {
+        group.list.forEach(game => {
+            uniqueGames.add(game.id); 
+        });
+    });
+
+    setTotalUniqueGames(uniqueGames.size);
+};
+const deleteList = async (listName: string) => {
+  const token = localStorage.getItem("token");
+  
+  try {
+    const response = await fetch(`/api/list-group`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ listName, user: loggedUser }),
+    });
+    
+    if (response.ok) {
+      const updatedUserListGroup = userListGroup.filter(group => group.listName !== listName);
+      setUserListGroup(updatedUserListGroup);
+      localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(updatedUserListGroup));
+      console.log("Lista deletada com sucesso");
+    } else {
+      console.error("Erro ao deletar lista");
+    }
+  } catch (error) {
+    console.error("Erro ao deletar a lista:", error);
+  }
+};
   return (
     <Container fluid className={styles.mainContainer}>
       <div className={styles.headerContainer}>
@@ -206,8 +242,17 @@ export default function MyUserList(props: IMyUserListProps) {
               <h2 className={styles.listName}>
                 {group.listName}
               </h2>
+              
+                <BsTrash3Fill 
+                className={styles.trashIcon}
+                onClick={(e)=>{
+                  e.stopPropagation()
+                  deleteList(group.listName)
+                }
+                }
+                />
+            
             </div>
-
             {visibleLists.includes(idx) && (
               <div className={styles.gameListContainer}>
                 {group.list.map((game) => (

@@ -145,4 +145,45 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+export async function DELETE(request: NextRequest) {
+  const { listName, user } = await request.json();
 
+  if (!listName || !user) {
+    return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
+  }
+
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader) {
+    return NextResponse.json({ error: 'No token provided' }, { status: 401 });
+  }
+  const token = authHeader.split(' ')[1];
+
+  try {
+    jwt.verify(token, secretKey);
+
+    const db = openDb();
+
+    await new Promise<void>((resolve, reject) => {
+      db.run(
+        'DELETE FROM userListGroups WHERE user = ? AND listName = ?',
+        [user, listName],
+        (err) => {
+          if (err) {
+            console.error('Erro ao deletar a lista:', err.message);
+            reject(err);
+          } else {
+            resolve();
+          }
+        }
+      );
+    });
+
+    return NextResponse.json({ message: 'List deleted successfully' }, { status: 200 });
+  } catch (error) {
+    console.error('Erro ao deletar a lista:', error);
+    if (error instanceof jwt.JsonWebTokenError) {
+      return NextResponse.json({ error: 'Invalid or missing token' }, { status: 401 });
+    }
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
