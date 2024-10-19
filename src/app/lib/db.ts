@@ -1,6 +1,5 @@
 import sqlite3 from 'sqlite3';
 
-// Função para abrir conexão com o banco de dados
 export const openDb = (): sqlite3.Database => {
   const db = new sqlite3.Database('./users.db');
 
@@ -30,6 +29,23 @@ export const openDb = (): sqlite3.Database => {
           console.error('Error creating table "userListGroups":', err.message);
         } else {
           console.log('Table "userListGroups" is ready.');
+        }
+      }
+    );
+
+    // Cria a tabela 'user_games' 
+    db.run(
+      `CREATE TABLE IF NOT EXISTS user_games (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        game_id INTEGER NOT NULL,
+        progress INTEGER NOT NULL
+      )`,
+      (err) => {
+        if (err) {
+          console.error('Error creating table "user_games":', err.message);
+        } else {
+          console.log('Table "user_games" is ready.');
         }
       }
     );

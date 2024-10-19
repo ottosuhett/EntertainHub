@@ -32,6 +32,38 @@ export default function MyUserList(props: IMyUserListProps) {
   };
 
   useEffect(() => {
+    const fetchProgressFromDB = async () => {
+      const token = localStorage.getItem("token");
+  
+      try {
+        const response = await fetch(`/api/get-progress?user=${loggedUser}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error("Erro ao carregar o progresso do banco de dados.");
+        }
+  
+        const data = await response.json();
+  
+        // Atualiza o progresso local com os dados do banco de dados
+        const savedGameProgress: { [key: number]: number } = {};
+        data.progress.forEach((progressItem: { gameId: number; progress: number }) => {
+          savedGameProgress[progressItem.gameId] = progressItem.progress;
+        });
+  
+        setGameProgress(savedGameProgress);
+      } catch (error) {
+        console.error("Erro ao carregar o progresso do banco de dados:", error);
+      }
+    };
+  
+    fetchProgressFromDB();
+  }, [loggedUser]);
+  
+  useEffect(() => {
     const savedListGroup = localStorage.getItem(`${loggedUser}_listGroup`);
     const savedGameProgress: { [key: number]: number } = {};
   
@@ -119,7 +151,7 @@ export default function MyUserList(props: IMyUserListProps) {
     
     const userProgressKey = `${loggedUser}_gameProgress_${gameId}`;
     localStorage.setItem(userProgressKey, JSON.stringify(newProgress));
-  
+    updateProgressGameDB(gameId,newProgress)
     if (selectedGame && selectedGame.id === gameId) {
       setSelectedGame((prevGame) => {
         if (prevGame) {
@@ -133,6 +165,32 @@ export default function MyUserList(props: IMyUserListProps) {
     }
   };
   
+  const updateProgressGameDB = async(gameId: number, newProgress: number) =>{
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("/api/update-progress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          user: loggedUser,
+          gameId: gameId,
+          progress: newProgress,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar o progresso no banco de dados.");
+      }
+  
+      const data = await response.json();
+      console.log("Progresso atualizado no banco de dados:", data);
+    } catch (error) {
+      console.error("Erro ao salvar o progresso:", error);
+    }
+  }
   return (
     <Container fluid className={styles.mainContainer}>
       <div className={styles.headerContainer}>

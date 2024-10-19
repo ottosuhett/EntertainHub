@@ -24,18 +24,22 @@ export async function GET(request: NextRequest) {
 
     // Abre o banco de dados
     const db = openDb();
+    type Row = { listName: string; listGroup: string };
 
     return new Promise((resolve, reject) => {
-      db.get<{ listGroup: string }>(
-        'SELECT listGroup FROM userListGroups WHERE user = ?',
+      db.all(
+        'SELECT listName, listGroup FROM userListGroups WHERE user = ?',
         [user],
-        (err, row) => {
+        function (err, rows: any) { 
           if (err) {
             console.error('Error fetching listGroup:', err.message);
             reject(NextResponse.json({ error: 'Error fetching listGroup' }, { status: 500 }));
-          } else if (row && row.listGroup) {
-            console.log(`ListGroup encontrado para o usuário ${user}:`, row.listGroup); 
-            resolve(NextResponse.json({ listGroup: JSON.parse(row.listGroup) })); 
+          } else if (rows) {
+            const lists = (rows as Row[]).map((row: Row) => ({
+              listName: row.listName,
+              list: JSON.parse(row.listGroup), 
+            }));
+            resolve(NextResponse.json({ listGroup: lists }));
           } else {
             resolve(NextResponse.json({ listGroup: [] })); 
           }
@@ -115,7 +119,7 @@ export async function PUT(request: NextRequest) {
 
     const db = openDb();
 
-    // Atualiza a lista 
+    // Atualiza a lista
     await new Promise<void>((resolve, reject) => {
       const listGroupString = JSON.stringify(games);
       db.run(
@@ -141,3 +145,4 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
