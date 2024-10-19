@@ -3,6 +3,7 @@ import styles from "./LoginWindow.module.scss"
 import {Form, Button,Container} from 'react-bootstrap';
 import ButtonComp from "@/components/Btns/ButtonComp"
 import { MainContext } from '@/app/context/MainContext';
+import ToastComp from '../ToastComp/ToastComp';
 
 export interface ILoginWindowProps {
 }
@@ -15,6 +16,9 @@ export default function LoginWindow (props: ILoginWindowProps) {
   const [userName, setUserName ] = useState<string>("")
   const [passWord, setPassword] = useState<string>("")
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
+
 
   useEffect(() => {
     if (isRegistered) {
@@ -35,9 +39,11 @@ export default function LoginWindow (props: ILoginWindowProps) {
     const isEmptyField = isEmpty(newUsername,newPassword)
 
     if (isEmptyField) {
-      window.alert("Do not leave fields blank");
+      setToastMessage('Do not leave fields blank');
+      setShowToast(true);
     } else if (!validatePassword(newPassword)) {
-      window.alert("Password must be at least 8 characters long, including letters, numbers and special symbols");
+      setToastMessage('Password must be at least 8 characters long, including letters, numbers and special symbols');
+      setShowToast(true);
     }else{
       try {
         const response = await fetch('/api/register', {
@@ -51,14 +57,18 @@ export default function LoginWindow (props: ILoginWindowProps) {
         const data = await response.json();
   
         if (response.ok) {
-          alert('User registered successfully');
+          setToastMessage('User registered successfully');
+          setShowToast(true);
           setIsRegistered(true);
         } else {
-          alert(data.error);
+          setToastMessage(data.error);
+          setShowToast(true);
+         
         }
       } catch (error) {
+        setToastMessage(error as string);
+        setShowToast(true);
         console.error('An error occurred:', error);
-        alert('An error occurred while registering');
       }
       setNewUsername("")
       setNewPassword("")
@@ -71,7 +81,8 @@ export default function LoginWindow (props: ILoginWindowProps) {
     event.preventDefault();
     const isEmptyField = isEmpty(userName,passWord)
     if(isEmptyField){
-      window.alert("Prencha o campo do login em branco")
+      setToastMessage('Fill in the blank login field');
+      setShowToast(true);
     }else{
       try {
         const response = await fetch('/api/login', {
@@ -90,15 +101,18 @@ export default function LoginWindow (props: ILoginWindowProps) {
           // Armazeno o user logado no localStorage
           localStorage.setItem('loggedUser', userName);
 
-          alert('Login successful');
+          setToastMessage('Login successful');
+          setShowToast(true);
           setIsLogged(true)
           setLoggedUser(userName)
         } else {
-          alert(data.error);
+          setToastMessage(data.error);
+          setShowToast(true);
         }
       } catch (error) {
+        setToastMessage('An error occurred during login');
+        setShowToast(true);
         console.error('An error occurred:', error);
-        alert('An error occurred during login');
       }
     }
     
@@ -120,7 +134,6 @@ export default function LoginWindow (props: ILoginWindowProps) {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.leftContainer}>
-        <div></div>
         {openRegister ? 
         <div className={styles.inputsDiv}>
           <Form.Control
@@ -185,7 +198,7 @@ export default function LoginWindow (props: ILoginWindowProps) {
             </p>
             <ButtonComp title={"Login"} onClickEvent={handleLogin}/>
         </div>
-        
+        <ToastComp msg={toastMessage} show={showToast} setShow={setShowToast} />
       </div>
     </div>
   );

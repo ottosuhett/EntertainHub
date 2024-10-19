@@ -1,0 +1,21 @@
+.toastContainer{
+    .title{
+        font-size: 1.4rem;
+        color: black;
+    }
+    .img{
+        width: 5rem;
+        height: auto;
+    }
+    .msg{
+        font-size: 1.5rem;
+    }
+    .timeTxt{
+        font-size: 1rem;
+    }
+    .header{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+}
