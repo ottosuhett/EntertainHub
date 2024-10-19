@@ -11,6 +11,7 @@ export interface IModalCompProps {
     state:boolean;
     setState:React.Dispatch<React.SetStateAction<boolean>>
     onConfirm: () => void;
+    onCancel?:()=> void;
 }
 
 export default function ModalComp (props: IModalCompProps) {
@@ -27,7 +28,12 @@ export default function ModalComp (props: IModalCompProps) {
         <Modal.Footer>
           <Button 
           variant="secondary" 
-          onClick={()=>handleCloseModal(props.setState)}
+          onClick={()=>{
+            if(props.onCancel){
+              props.onCancel()
+            }
+            handleCloseModal(props.setState)
+          }}
           className={styles.btn}
           >
             {props.closeBtnTxt}

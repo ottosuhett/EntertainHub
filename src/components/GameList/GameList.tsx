@@ -4,12 +4,13 @@ import {Form, Button,Card,Dropdown,DropdownButton} from 'react-bootstrap';
 import {handleOpenModal,handleCloseModal} from "@/app/functions/genericFunctions"
 import styles from "./GameList.module.scss"
 import ModalComp from '../ModalComp/ModalComp';
+import { useRouter } from 'next/navigation';
 
 export interface IGameListProps {
 }
 
 export default function GameList (props: IGameListProps) {
-    const {gameList, setGameList,searchedGame,userList, setUserList,userListGroup,setUserListGroup,loggedUser,cachedGames, setCachedGames,totalUniqueGames,setTotalUniqueGames} = useContext(MainContext)
+    const {gameList, setGameList,searchedGame,userList, setUserList,userListGroup,setUserListGroup,loggedUser,cachedGames, setCachedGames,totalUniqueGames,setTotalUniqueGames,setSelectedNavBar} = useContext(MainContext)
 
     const [newListName, setNewListName] = useState<string>('');
     const [openCreateListmodal, setOpenCreateListmodal ] = useState(false)
@@ -20,7 +21,8 @@ export default function GameList (props: IGameListProps) {
     const listToRender = searchedGame.length > 0 ? filteredGameList : gameList
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);
     const [openShowMoreModal, setOpenShowMoreModal] = useState(false);
-    // const [cachedGames, setCachedGames] = useState<{ [key: number]: Game }>({});
+    
+    const router = useRouter();
 
     useEffect(() => {
       const cached = localStorage.getItem('cachedGames');
@@ -182,7 +184,10 @@ export default function GameList (props: IGameListProps) {
                     {userListGroup.map((group, idx) => (
                       <Dropdown.Item
                         key={idx}
-                        onClick={() => addGameToExistingList(group.listName, game)}
+                        onClick={async() =>{
+                          await addGameToExistingList(group.listName, game)
+                          router.push("/myList");
+                        }}
                       >
                         {group.listName}
                       </Dropdown.Item>
@@ -208,14 +213,17 @@ export default function GameList (props: IGameListProps) {
         setState={setOpenCreateListmodal}
         confirmBtnTxt='Create'
         closeBtnTxt='Cancel'
-        onConfirm={() => {
+        onConfirm={async () => {
           if (selectedGame) {
-            createNewList(selectedGame); 
+            await createNewList(selectedGame);
           }
           setOpenCreateListmodal(false);
+          router.push("/myList");
+          
         }}
+        onCancel={()=>setNewListName("")}
         >
-        <p className={styles.txt}>{newListName}</p>
+        <p className={styles.txt}>{newListName.length >0 ?`The list "${newListName}" will be created`:"List name"}</p>
         <Form>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Label className={styles.labelTxt}>List name</Form.Label>
