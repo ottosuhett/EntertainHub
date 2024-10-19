@@ -37,7 +37,9 @@ export default function MyUserList(props: IMyUserListProps) {
   
     userListGroup.forEach(group => {
       group.list.forEach(game => {
-        const savedProgress = localStorage.getItem(`gameProgress_${game.id}`);
+        const userProgressKey = `${loggedUser}_gameProgress_${game.id}`;
+        const savedProgress = localStorage.getItem(userProgressKey);
+
         if (savedProgress) {
           savedGameProgress[game.id] = JSON.parse(savedProgress);
         }
@@ -79,7 +81,8 @@ export default function MyUserList(props: IMyUserListProps) {
   const handleShowDetails = async (game: Game) => {
     const cachedGame = cachedGames[game.id];
   
-    const savedProgress = localStorage.getItem(`gameProgress_${game.id}`);
+    const userProgressKey = `${loggedUser}_gameProgress_${game.id}`;
+    const savedProgress = localStorage.getItem(userProgressKey);
     const progress = savedProgress ? JSON.parse(savedProgress) : 0;
   
     if (cachedGame) {
@@ -113,11 +116,20 @@ export default function MyUserList(props: IMyUserListProps) {
       ...prevProgress,
       [gameId]: newProgress,
     }));
-  
-    localStorage.setItem(`gameProgress_${gameId}`, JSON.stringify(newProgress));
+    
+    const userProgressKey = `${loggedUser}_gameProgress_${gameId}`;
+    localStorage.setItem(userProgressKey, JSON.stringify(newProgress));
   
     if (selectedGame && selectedGame.id === gameId) {
-      setSelectedGame({ ...selectedGame, progress: newProgress });
+      setSelectedGame((prevGame) => {
+        if (prevGame) {
+          return {
+            ...prevGame,
+            progress: newProgress,
+          };
+        }
+        return prevGame;
+      });
     }
   };
   
