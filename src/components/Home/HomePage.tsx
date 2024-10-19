@@ -7,7 +7,7 @@ import styles from "./HomePage.module.scss"
 import { getGameList } from '@/app/functions/genericFunctions';
 import Image from 'next/image';
 import ProfileInfoCard from '../ProfileInfoCard/ProfileInfoCard';
-import MainNavBar from '../MainNavBar/MainNavBar';
+import Ranking from '../Ranking/Ranking';
 export interface IHomePageProps {
 }
 
@@ -60,18 +60,17 @@ export default function HomePage (props: IHomePageProps) {
             </Carousel>
           )}
           
-          <div className={styles.secondContainer}>
-            <div className={styles.profileCarContainer}>
-              <ProfileInfoCard />
-            </div>
-            <div className={styles.gifContainer}>
-              <img src={gifUrl} alt="Giphy Gif" style={{ width: "400px", height: 'auto' }} />
-            </div>
+          <div className={styles.profileRankingContainer}>
             <div>
-              <img src={gifUrl2} alt="Giphy Gif" style={{ width: '250px', height: "auto" }} className={styles.gifPlayMore}/>
+              <Ranking />
+            </div>
+            <div className={styles.profileCardContainer}>
+              <ProfileInfoCard />
+              <div>
+                <img src={gifUrl} alt="Giphy Gif" style={{ width: "400px", height: 'auto' }} />
+              </div>
             </div>
           </div>
-          
         </Container>
       );
     }

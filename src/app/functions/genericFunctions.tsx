@@ -52,4 +52,20 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     }
   };
   
-export {getGameList}
+  const getRanking = async () => {
+    const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+    const API_URL = `https://api.rawg.io/api/games?key=${API_KEY}&ordering=-rating&page_size=10`;
+  
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error('Erro ao buscar os jogos mais bem avaliados');
+      }
+      const data = await response.json();
+      return data.results;
+    } catch (error) {
+      console.error('Erro ao buscar os jogos mais bem avaliados:', error);
+      return [];
+    }
+  };
+export {getGameList,getRanking}

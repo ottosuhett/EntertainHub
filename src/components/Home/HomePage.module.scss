@@ -17,17 +17,20 @@
 .mainContainer{
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 5rem;
 }
-
-.secondContainer{
+.profileRankingContainer{
     display: flex;
+    gap: 1rem;
     justify-content: space-around;
+    flex-wrap: wrap;
     align-items: center;
-
 }
-.gifContainer{
-    width: 50rem;
+.profileCardContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+    margin-top: 2rem;
 }
 @media(max-width:$mediumWindowSize){
     .title{

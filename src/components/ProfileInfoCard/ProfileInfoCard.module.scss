@@ -26,10 +26,21 @@
         font-size: 1.8rem;
         color: #fff;
     }
-    .infoTxt{
+    .labelContainer{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5rem;
         font-size: 1.5rem;
         color: #fff;
+    }
+    .infoTxt{
+        font-size: 3rem;
+        color: #fff;
         margin-left: 1rem;
+    }
+    .number{
+        font-size: 2rem;
     }
     .body{
         display: flex; 

@@ -86,16 +86,18 @@ export default function ProfileInfoCard (props: IProfileInfoCardProps) {
                     
                 </div>
                 <div className={styles.body}>
-                    <p className={styles.label}>
-                    List: <span className={styles.infoTxt}>{listCount}</span>
+                    <p className={styles.labelContainer}>
+                    <div className={styles.label}>List: </div> 
+                    <span className={styles.number}>{listCount}</span>
                     </p>
-                    <p className={styles.label}> 
-                        Games: <span className={styles.infoTxt}>{totalUniqueGames}</span>
+                    <p className={styles.labelContainer}> 
+                        <div className={styles.label}>Games: </div>
+                        <span className={styles.number}>{totalUniqueGames}</span>
                     </p>
                 </div>
-                <div className={styles.btnContainer}>
+                {/* <div className={styles.btnContainer}>
                     <Button className={styles.btn}> Edit Profile</Button>
-                </div>
+                </div> */}
             </>
             
             :
