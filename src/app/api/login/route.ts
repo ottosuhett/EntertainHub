@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     if (match) {
       // Gera o token JWT
-      const token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '1h' });
+      const token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '3h' });
       // Envio o token de volta para o front
       return NextResponse.json({ message: 'Login successful', token });
     } else {

@@ -12,6 +12,8 @@ export default function ProfileInfoCard (props: IProfileInfoCardProps) {
     const { loggedUser, userListGroup, setUserListGroup, totalUniqueGames ,setTotalUniqueGames} = useContext(MainContext);
     const [listCount, setListCount] = useState(0);
 
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
       const fetchUserLists = async () => {
           try {
@@ -34,30 +36,23 @@ export default function ProfileInfoCard (props: IProfileInfoCardProps) {
                   setListCount(lists.length);
                   updateTotalUniqueGames(lists); 
               } else {
-                  console.error('Nenhuma lista encontrada no localStorage.');
+                setUserListGroup([]);
+                setListCount(0);
+                console.error('Nenhuma lista encontrada no localStorage.');
               }
+          }finally{
+            setIsLoading(false); 
           }
       };
   
       if (loggedUser) {
+        setUserListGroup([]);
+        setListCount(0);
+        setTotalUniqueGames(0);
           fetchUserLists();
       }
-  }, [loggedUser, setUserListGroup]);
+  }, [loggedUser, setUserListGroup,setTotalUniqueGames]);
 
-      // useEffect(()=>{
-      //   const totalUniqueGames = getTotalUniqueGames(userListGroup);
-      // },[userListGroup])
-    // const getTotalUniqueGames = (userListGroup: UserListGroup[]): number => {
-    //   const uniqueGames = new Set<number>();
-    
-    //   userListGroup.forEach(group => {
-    //     group.list.forEach(game => {
-    //       uniqueGames.add(game.id); 
-    //     }); 
-    //   });
-    
-    //   return uniqueGames.size; 
-    // };
     const updateTotalUniqueGames = (lists: UserListGroup[]) => {
       const uniqueGames = new Set<number>();
       
@@ -69,6 +64,9 @@ export default function ProfileInfoCard (props: IProfileInfoCardProps) {
 
       setTotalUniqueGames(uniqueGames.size);
   };
+  if (isLoading) {
+    return <p>Loading data...</p>; 
+  }
   return (
     <Container fluid className={styles.mainContainer}>
         {
