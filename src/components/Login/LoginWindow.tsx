@@ -34,8 +34,10 @@ export default function LoginWindow (props: ILoginWindowProps) {
     event.preventDefault();
     const isEmptyField = isEmpty(newUsername,newPassword)
 
-    if(isEmptyField){
-      window.alert("Prencha o campo em branco")
+    if (isEmptyField) {
+      window.alert("Do not leave fields blank");
+    } else if (!validatePassword(newPassword)) {
+      window.alert("Password must be at least 8 characters long, including letters, numbers and special symbols");
     }else{
       try {
         const response = await fetch('/api/register', {
@@ -111,6 +113,10 @@ export default function LoginWindow (props: ILoginWindowProps) {
     }
 
   }
+  const validatePassword = (password: string): boolean => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
   return (
     <div className={styles.mainContainer}>
       <div className={styles.leftContainer}>
@@ -127,9 +133,9 @@ export default function LoginWindow (props: ILoginWindowProps) {
           />
           <Form.Control 
           type="password"  
-          placeholder="Choose a password max 8 characters" 
+          placeholder="Choose a password min 8 characters including letters, numbers and special symbols" 
           className={styles.inputRegister}
-          maxLength={8}
+          minLength={8}
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           required
