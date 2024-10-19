@@ -21,7 +21,9 @@ export default function GameList (props: IGameListProps) {
     const listToRender = searchedGame.length > 0 ? filteredGameList : gameList
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);
     const [openShowMoreModal, setOpenShowMoreModal] = useState(false);
-    
+    const [gameAlreadyInList, setGameAlreadyInList] = useState<string | null>(null);
+    const [openAlreadyExistsModal, setOpenAlreadyExistsModal] = useState(false);
+
     const router = useRouter();
 
     useEffect(() => {
@@ -35,50 +37,53 @@ export default function GameList (props: IGameListProps) {
     }, [cachedGames]);
 
     const addGameToExistingList = async (listName: string, game: Game) => {
-      const previousUserListGroup = [...userListGroup];
-    
-      const updatedGroups = userListGroup.map((group) => {
-        if (group.listName === listName) {
-          return { ...group, list: [...group.list, game] };
+      // const previousUserListGroup = [...userListGroup];
+      const targetList = userListGroup.find(group => group.listName === listName);
+      if (targetList) {
+        const gameExists = targetList.list.some(existingGame => existingGame.id === game.id);
+        
+        if (gameExists) {
+          setGameAlreadyInList(listName); 
+          setOpenAlreadyExistsModal(true); 
+          return;
         }
-        return group;
-      });
-    
-      setUserListGroup(updatedGroups);
-      updateTotalUniqueGames(updatedGroups);
-      try {
-        const token = localStorage.getItem('token');
-    
-        if (!token) {
-          throw new Error('Usuário não autenticado');
-        }
-    
-        // atualizaa lista no banco de dados
-        const response = await fetch(`/api/list-group`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            listName,
-            games: updatedGroups.find((group) => group.listName === listName)?.list,
-            user: loggedUser,
-          }),
+  
+        const updatedGroups = userListGroup.map((group) => {
+          if (group.listName === listName) {
+            return { ...group, list: [...group.list, game] };
+          }
+          return group;
         });
+  
+        setUserListGroup(updatedGroups);
+        updateTotalUniqueGames(updatedGroups);
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) throw new Error('Usuário não autenticado');
+      
+          const response = await fetch(`/api/list-group`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              listName,
+              games: updatedGroups.find((group) => group.listName === listName)?.list,
+              user: loggedUser,
+            }),
+          });
+      
+          if (!response.ok) throw new Error('Erro ao atualizar a lista no banco de dados');
+      
+          localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(updatedGroups));
+          router.push("/myList");
+        } catch (error) {
+          console.error('Erro ao adicionar o jogo na lista existente:', error);
+        //   setUserListGroup(previousUserListGroup);
     
-        if (!response.ok) {
-          throw new Error('Erro ao atualizar a lista no banco de dados');
+        // localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(previousUserListGroup));
         }
-    
-        // Atualiza o localStorage com a nov lista
-        localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(updatedGroups));
-      } catch (error) {
-        console.error('Erro ao adicionar o jogo na lista existente:', error);
-    
-        setUserListGroup(previousUserListGroup);
-    
-        localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(previousUserListGroup));
       }
     };
     
@@ -186,7 +191,6 @@ export default function GameList (props: IGameListProps) {
                         key={idx}
                         onClick={async() =>{
                           await addGameToExistingList(group.listName, game)
-                          router.push("/myList");
                         }}
                       >
                         {group.listName}
@@ -253,6 +257,18 @@ export default function GameList (props: IGameListProps) {
           <p className={styles.description}>{selectedGame.description || 'No description available'}</p> 
         </ModalComp>
       )}
+
+    {<ModalComp 
+      title='Info' 
+      state={openAlreadyExistsModal} 
+      setState={setOpenAlreadyExistsModal}
+      closeBtnTxt='Close' 
+      >
+        <p className={styles.txt}>
+        The game is already on the list "{gameAlreadyInList}".
+        </p>
+    </ModalComp>
+    }
       </div>
       
     );

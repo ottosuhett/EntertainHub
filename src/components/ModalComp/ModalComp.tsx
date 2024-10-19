@@ -7,10 +7,10 @@ export interface IModalCompProps {
     title:string;
     children?: React.ReactNode;
     closeBtnTxt:string;
-    confirmBtnTxt:string;
+    confirmBtnTxt?:string;
     state:boolean;
     setState:React.Dispatch<React.SetStateAction<boolean>>
-    onConfirm: () => void;
+    onConfirm?: () => void;
     onCancel?:()=> void;
 }
 
@@ -38,17 +38,22 @@ export default function ModalComp (props: IModalCompProps) {
           >
             {props.closeBtnTxt}
           </Button>
-          <Button 
-          variant="primary" 
-          onClick={()=>{
-            handleCloseModal(props.setState)
-            props.onConfirm()
+          {props.onConfirm &&
+            <Button 
+            variant="primary" 
+            onClick={()=>{
+              handleCloseModal(props.setState)
+              if(props.onConfirm){
+                props.onConfirm()
+              }
+            }
+            }
+            className={styles.btn}
+            >
+              {props.confirmBtnTxt}
+            </Button>
           }
-          }
-          className={styles.btn}
-          >
-            {props.confirmBtnTxt}
-          </Button>
+          
         </Modal.Footer>
       </Modal>
         </div>
