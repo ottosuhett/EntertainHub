@@ -30,13 +30,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
+    gap: 4rem;
     width: 100%;
+    margin-top: 35rem;
     .inputRegister{
         display: flex;
         width: 70%;
         font-size: 2rem;
         text-align: center;
+        align-content: center;
         &::placeholder{
             font-size: 1rem;
         }
@@ -113,6 +115,9 @@
         }
         .leftContainer{
             min-height: 50vh;
+        }
+        .inputsDiv{
+            margin-top: 25rem;
         }
     }
 }
