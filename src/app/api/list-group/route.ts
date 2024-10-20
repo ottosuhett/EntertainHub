@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { openDb } from '../../lib/db';
+import { supabase } from '../../lib/supabase';
 import jwt from 'jsonwebtoken';
 
 const secretKey = process.env.JWT_SECRET || 'myVeryStrongSecretKey';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const user = searchParams.get('user'); // Obtém o nome do usuário a partir da query string
+  const user = searchParams.get('user'); 
 
   if (!user) {
     return NextResponse.json({ error: 'User is required' }, { status: 400 });
@@ -16,45 +16,35 @@ export async function GET(request: NextRequest) {
   if (!authHeader) {
     return NextResponse.json({ error: 'No token provided' }, { status: 401 });
   }
+
   const token = authHeader.split(' ')[1];
 
   try {
-    // Verifica se o token é válido
     jwt.verify(token, secretKey);
 
-    // Abre o banco de dados
-    const db = openDb();
-    type Row = { listName: string; listGroup: string };
+    // Corrigido para usar colunas em letras minúsculas
+    const { data, error } = await supabase
+      .from('userListGroups')
+      .select('listname, listgroup')
+      .eq('user', user);
 
-    return new Promise((resolve, reject) => {
-      db.all(
-        'SELECT listName, listGroup FROM userListGroups WHERE user = ?',
-        [user],
-        function (err, rows: any) { 
-          if (err) {
-            console.error('Error fetching listGroup:', err.message);
-            reject(NextResponse.json({ error: 'Error fetching listGroup' }, { status: 500 }));
-          } else if (rows) {
-            const lists = (rows as Row[]).map((row: Row) => ({
-              listName: row.listName,
-              list: JSON.parse(row.listGroup), 
-            }));
-            resolve(NextResponse.json({ listGroup: lists }));
-          } else {
-            resolve(NextResponse.json({ listGroup: [] })); 
-          }
-        }
-      );
-    });
+    if (error) {
+      console.error('Error fetching listGroup:', error.message);
+      return NextResponse.json({ error: 'Error fetching listGroup' }, { status: 500 });
+    }
+
+    const lists = data.map((row: { listname: string; listgroup: string }) => ({
+      listName: row.listname,
+      list: JSON.parse(row.listgroup),
+    }));
+
+    return NextResponse.json({ listGroup: lists });
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
       return NextResponse.json({ error: 'Invalid or missing token' }, { status: 401 });
-    } else if (error instanceof Error) {
-      console.error('An error occurred:', error.message);
-      return NextResponse.json({ error: 'Error fetching listGroup' }, { status: 500 });
     } else {
-      console.error('An unknown error occurred:', error);
-      return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
+      console.error('An error occurred:', error);
+      return NextResponse.json({ error: 'Error fetching listGroup' }, { status: 500 });
     }
   }
 }
@@ -70,34 +60,30 @@ export async function POST(request: NextRequest) {
   if (!authHeader) {
     return NextResponse.json({ error: 'No token provided' }, { status: 401 });
   }
+
   const token = authHeader.split(' ')[1];
 
   try {
     jwt.verify(token, secretKey);
-    const db = openDb();
-    await new Promise<void>((resolve, reject) => {
-      const listGroupString = JSON.stringify(games);
-      db.run(
-        'INSERT INTO userListGroups (user, listName, listGroup) VALUES (?, ?, ?)',
-        [user, listName, listGroupString],
-        (err) => {
-          if (err) {
-            console.error('Erro ao salvar a lista:', err.message);
-            reject(err);
-          } else {
-            resolve();
-          }
-        }
-      );
-    });
+
+    const listGroupString = JSON.stringify(games);
+
+    // Corrigido para usar colunas em letras minúsculas
+    const { data, error } = await supabase
+      .from('userListGroups')
+      .insert([{ user, listname: listName, listgroup: listGroupString }]);
+
+    if (error) {
+      console.error('Erro ao salvar a lista:', error.message || error);
+      return NextResponse.json({ error: 'Error saving list', details: error.message || error }, { status: 500 });
+    }
+
+    console.log('List inserted successfully:', data);
 
     return NextResponse.json({ message: 'List created successfully' }, { status: 201 });
   } catch (error) {
-    console.error('Erro ao processar a solicitação:', error);
-    if (error instanceof jwt.JsonWebTokenError) {
-      return NextResponse.json({ error: 'Invalid or missing token' }, { status: 401 });
-    }
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Erro ao processar a solicitação:', error instanceof Error ? error.message : error);
+    return NextResponse.json({ error: 'Error creating list' }, { status: 500 });
   }
 }
 
@@ -112,39 +98,33 @@ export async function PUT(request: NextRequest) {
   if (!authHeader) {
     return NextResponse.json({ error: 'No token provided' }, { status: 401 });
   }
+
   const token = authHeader.split(' ')[1];
 
   try {
     jwt.verify(token, secretKey);
 
-    const db = openDb();
+    const listGroupString = JSON.stringify(games);
 
-    // Atualiza a lista
-    await new Promise<void>((resolve, reject) => {
-      const listGroupString = JSON.stringify(games);
-      db.run(
-        'UPDATE userListGroups SET listGroup = ? WHERE user = ? AND listName = ?',
-        [listGroupString, user, listName],
-        (err) => {
-          if (err) {
-            console.error('Erro ao atualizar a lista:', err.message);
-            reject(err);
-          } else {
-            resolve();
-          }
-        }
-      );
-    });
+    // Corrigido para usar colunas em letras minúsculas
+    const { error } = await supabase
+      .from('userListGroups')
+      .update({ listgroup: listGroupString })
+      .eq('user', user)
+      .eq('listname', listName);
+
+    if (error) {
+      console.error('Erro ao atualizar a lista:', error.message || error);
+      return NextResponse.json({ error: 'Error updating list', details: error.message || error }, { status: 500 });
+    }
 
     return NextResponse.json({ message: 'List updated successfully' }, { status: 200 });
   } catch (error) {
-    console.error('Erro ao processar a solicitação:', error);
-    if (error instanceof jwt.JsonWebTokenError) {
-      return NextResponse.json({ error: 'Invalid or missing token' }, { status: 401 });
-    }
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Erro ao processar a solicitação:', error instanceof Error ? error.message : error);
+    return NextResponse.json({ error: 'Error updating list' }, { status: 500 });
   }
 }
+
 export async function DELETE(request: NextRequest) {
   const { listName, user } = await request.json();
 
@@ -156,34 +136,27 @@ export async function DELETE(request: NextRequest) {
   if (!authHeader) {
     return NextResponse.json({ error: 'No token provided' }, { status: 401 });
   }
+
   const token = authHeader.split(' ')[1];
 
   try {
     jwt.verify(token, secretKey);
 
-    const db = openDb();
+    // Corrigido para usar colunas em letras minúsculas
+    const { error } = await supabase
+      .from('userListGroups')
+      .delete()
+      .eq('user', user)
+      .eq('listname', listName);
 
-    await new Promise<void>((resolve, reject) => {
-      db.run(
-        'DELETE FROM userListGroups WHERE user = ? AND listName = ?',
-        [user, listName],
-        (err) => {
-          if (err) {
-            console.error('Erro ao deletar a lista:', err.message);
-            reject(err);
-          } else {
-            resolve();
-          }
-        }
-      );
-    });
+    if (error) {
+      console.error('Erro ao deletar a lista:', error.message || error);
+      return NextResponse.json({ error: 'Error deleting list', details: error.message || error }, { status: 500 });
+    }
 
     return NextResponse.json({ message: 'List deleted successfully' }, { status: 200 });
   } catch (error) {
-    console.error('Erro ao deletar a lista:', error);
-    if (error instanceof jwt.JsonWebTokenError) {
-      return NextResponse.json({ error: 'Invalid or missing token' }, { status: 401 });
-    }
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Erro ao deletar a lista:', error instanceof Error ? error.message : error);
+    return NextResponse.json({ error: 'Error deleting list' }, { status: 500 });
   }
 }

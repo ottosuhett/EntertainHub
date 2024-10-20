@@ -43,6 +43,8 @@ touch .env.local
 
 - **NEXT_PUBLIC_API_KEY=<YOUR_RAWG_API_KEY>**
 - **JWT_SECRET=myVeryStrongSecretKey**
+- **NEXT_PUBLIC_SUPABASE_URL=<YOUR_SUPABASE_URL>**
+- **NEXT_PUBLIC_SUPABASE_API_KEY=<YOUR_SUPABASE_API_KEY>**
 
 The JWT_SECRET variable is also configurable and can be set to any secret key of your choice for JWT authentication.
 
@@ -67,7 +69,8 @@ The project will run on http://localhost:3000. Open this URL in your browser to 
 - **JWT Authentication: Secure user registration and login.**
 - **Game progress tracking: Update and track game progress.**
 - **RAWG API integration: Fetch detailed game data (platforms, ratings, release dates, etc.).**
--**User-friendly interface: Intuitive UI to manage lists and track progress.**
+- **Supabase Integration: Uses Supabase for user management, database, and authentication**
+- **User-friendly interface: Intuitive UI to manage lists and track progress.**
 
 🛠️ Available Scripts
 In the project directory, you can run the following scripts:
@@ -89,4 +92,4 @@ In the project directory, you can run the following scripts:
 - **bcrypt**: Password hashing for secure user data storage.
 - **jsonwebtoken (JWT)**: Secure authentication using JSON Web Tokens.
 - **RAWG API**: Source of game data.
-- **SQLite**: Simple, efficient database for storing lists and user data.
+- **Supabase**: Backend-as-a-Service for user management, database, and authentication.

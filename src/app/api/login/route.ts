@@ -1,54 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
-import sqlite3 from 'sqlite3';
-import  {openDb} from "../../lib/db"
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { supabase } from '../../../app/lib/supabase';
 
-interface User {
-  id: number;
-  username: string;
-  password: string;
-}
-
-const getUser = async (db: sqlite3.Database, username: string): Promise<User | undefined> => {
-  return new Promise((resolve, reject) => {
-    db.get<User>('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(row);
-    });
-  });
-};
-const secretKey = process.env.JWT_SECRET || 'myVeryStrongSecretKey';
 export async function POST(request: NextRequest) {
   const { username, password } = await request.json();
+  const secretKey = process.env.JWT_SECRET || 'myVeryStrongSecretKey';
 
   if (!username || !password) {
     return NextResponse.json({ error: 'Username and password are required' }, { status: 400 });
   }
 
   try {
-    const db = openDb();
-    // buscu o user com uma promise
-    const user = await getUser(db, username);
+    // Busca o usuário na tabela "users"
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', username)
+      .single(); 
 
-    if (!user) {
+    if (error || !data) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const match = await bcrypt.compare(password, user.password);
-
-    if (match) {
-      // Gera o token JWT
-      const token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '3h' });
-      // Envio o token de volta para o front
-      return NextResponse.json({ message: 'Login successful', token });
-    } else {
+    const match = await bcrypt.compare(password, data.password);
+    if (!match) {
       return NextResponse.json({ error: 'Incorrect password' }, { status: 401 });
     }
+
+    // Gera o token JWT
+    const token = jwt.sign({ id: data.id, username: data.username }, secretKey, {
+      expiresIn: '3h',
+    });
+
+    return NextResponse.json({ message: 'Login successful', token });
   } catch (error) {
-    console.error('An error occurred:', error);
+    console.error('An error occurred during login:', error);
     return NextResponse.json({ error: 'Error during login' }, { status: 500 });
   }
 }

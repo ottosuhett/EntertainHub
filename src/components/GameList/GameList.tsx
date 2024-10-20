@@ -94,10 +94,13 @@ export default function GameList (props: IGameListProps) {
         list: [game],
       };
     
+      console.log('Creating new list:', newGroup);
+    
       try {
         const token = localStorage.getItem('token');
-    
+        
         if (!token) {
+          console.error('Token is missing');
           throw new Error('Usuário não autenticado');
         }
     
@@ -111,24 +114,25 @@ export default function GameList (props: IGameListProps) {
           body: JSON.stringify({ listName: newListName, games: [game], user: loggedUser }),
         });
     
+        console.log('Response status:', response.status);
         if (!response.ok) {
-          throw new Error('Erro ao salvar a lista no banco de dados');
+          const errorMsg = await response.text();
+          throw new Error(`Erro ao salvar a lista no banco de dados: ${errorMsg}`);
         }
     
-        // Atualiza o estado do contexto com a nova lista
         setUserListGroup([...userListGroup, newGroup]);
         updateTotalUniqueGames([...userListGroup, newGroup]);
-        // Atualiza o localStorage com a nova lista
         const updatedUserListGroup = [...userListGroup, newGroup];
         localStorage.setItem(`${loggedUser}_listGroup`, JSON.stringify(updatedUserListGroup));
     
         // Limpa o nome da nova lista
         setNewListName('');
+        console.log('List created successfully');
       } catch (error) {
         console.error('Erro ao criar a nova lista:', error);
       }
     };
-
+    
     const handleShowMore = async (game: Game) => {
       if (cachedGames[game.id]) {
         setSelectedGame(cachedGames[game.id]);
