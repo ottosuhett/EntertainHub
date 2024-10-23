@@ -5,6 +5,7 @@ import ButtonComp from "@/components/Btns/ButtonComp";
 import { MainContext } from '@/app/context/MainContext';
 import ToastComp from '../ToastComp/ToastComp';
 import { supabase } from "@/app/lib/supabase"; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export interface ILoginWindowProps {}
 
@@ -131,7 +132,7 @@ export default function LoginWindow(props: ILoginWindowProps) {
             <ButtonComp title={"Register"} onClickEvent={handleRegister} />
           </div>
         ) : null}
-        <p className={styles.leftDrescriptionMsg}>Store your <span className={styles.highlightMsg}>favorite</span> media</p>
+        <p className={styles.leftDescriptionMsg}>Store your <span className={styles.highlightMsg}>favorite</span> media</p>
       </div>
 
       <div className={styles.rightContainer}>

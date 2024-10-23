@@ -1,56 +1,68 @@
 @import "../../app/variableStyle/variables.scss";
 
-.mainContainer{
+.mainContainer {
     display: flex;
-}
-.leftContainer,.rightContainer{
-    height: auto;
-    background-size: cover; 
-    background-position:center; 
-    background-repeat: no-repeat;
     height: 100vh;
+}
+
+.leftContainer, .rightContainer {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     width: 50%;
+    height: 100vh;
 }
-.highlightMsg{
-    font-size: 4rem;
-    color: $lightTextColor;
-}
-.leftContainer{
-   background-image: url('../../../public/images/rabbit_head.jpg');
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   align-items: center;
-   .leftDrescriptionMsg{
-    font-size: 4rem;
-    color:#7A3C97;
-    margin-bottom: 1rem;
-   }
-   .inputsDiv{
+
+.leftContainer {
+    background-image: url('../../../public/images/rabbit_head.jpg');
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    gap: 4rem;
-    width: 100%;
-    margin-top: 35rem;
-    .inputRegister{
-        display: flex;
-        width: 70%;
-        font-size: 2rem;
+    .highlightMsg{
+        font-size: 4rem;
+        color: $lightTextColor;
+    }
+    .leftDescriptionMsg {
+        font-size: 4rem;
+        color: #7A3C97;
+        margin-bottom: 1rem;
         text-align: center;
-        align-content: center;
-        &::placeholder{
-            font-size: 1rem;
+    }
+
+    .inputsDiv {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4rem;
+        width: 100%;
+        margin-top: 35rem;
+
+        .inputRegister {
+            display: flex;
+            width: 70%;
+            font-size: 2rem;
+            text-align: center;
+            align-content: center;
+
+            &::placeholder {
+                font-size: 1rem;
+            }
         }
     }
 }
-}
-.rightContainer{
+
+.rightContainer {
     background-image: url('../../../public/images/dark_rabbit.jpg');
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     .mainRightContainerContent{
         margin-left: 4rem;
         display: flex;
@@ -58,25 +70,25 @@
         justify-content: space-around;
         height: 100vh;
         align-items: center;
-        .title,.loginTxt{
+        .loginTxt{
             font-size: 6.4rem;
-          }
-          .title{
-              color:$darkTextColor; 
-          }
-          .loginTxt{
-              color: #fff;
-          }
-          .titleContainer{
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              flex-direction: column;
-              gap: 1.5rem;
-              
-          }
+        }
+        .title{
+            color: $darkTextColor; 
+            font-size: 5rem;
 
-          .inputsDiv{
+        }
+        .loginTxt{
+            color: #fff;
+        }
+        .titleContainer{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .inputsDiv{
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -89,8 +101,8 @@
                 font-size: 3rem;
                 text-align: center;
             }
-          }
-          .registerMsg{
+        }
+        .registerMsg{
             font-size: 1.3rem;
             color: #fff;
             .registerLink{
@@ -103,21 +115,147 @@
                 }
             }
         }
-        
     }
-    
 }
-@media(max-width:990px){
+
+@media(max-width: 990px){
     .mainContainer{
-        flex-direction: column;
-        .leftContainer,.rightContainer{
-            width: 100%;
-        }
-        .leftContainer{
-            min-height: 50vh;
-        }
-        .inputsDiv{
-            margin-top: 25rem;
-        }
+        flex-direction: column; 
     }
+    .leftContainer,.rightContainer{
+        width: 100%;
+    }
+    .leftContainer{
+        min-height: 75rem;
+    }
+    .inputsDiv{
+        margin-top: 25rem;
+    } 
 }
+
+
+// codigo antigo
+// @import "../../app/variableStyle/variables.scss";
+
+// .mainContainer{
+//     display: flex;
+// }
+// .leftContainer,.rightContainer{
+//     height: auto;
+//     background-size: cover; 
+//     background-position:center; 
+//     background-repeat: no-repeat;
+//     height: 100vh;
+//     width: 50%;
+// }
+// .highlightMsg{
+//     font-size: 4rem;
+//     color: $lightTextColor;
+// }
+// .leftContainer{
+//    background-image: url('../../../public/images/rabbit_head.jpg');
+//    display: flex;
+//    flex-direction: column;
+//    justify-content: space-between;
+//    align-items: center;
+//    .leftDrescriptionMsg{
+//     font-size: 4rem;
+//     color:#7A3C97;
+//     margin-bottom: 1rem;
+//    }
+//    .inputsDiv{
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     gap: 4rem;
+//     width: 100%;
+//     margin-top: 35rem;
+//     .inputRegister{
+//         display: flex;
+//         width: 70%;
+//         font-size: 2rem;
+//         text-align: center;
+//         align-content: center;
+//         &::placeholder{
+//             font-size: 1rem;
+//         }
+//     }
+// }
+// }
+// .rightContainer{
+//     background-image: url('../../../public/images/dark_rabbit.jpg');
+//     display: flex;
+//     flex-direction: column;
+//     flex-wrap: wrap;
+    
+//     .mainRightContainerContent{
+//         margin-left: 4rem;
+//         display: flex;
+//         flex-direction: column;
+//         justify-content: space-around;
+//         height: 100vh;
+//         align-items: center;
+//         .title,.loginTxt{
+//             font-size: 6.4rem;
+//           }
+//           .title{
+//               color:$darkTextColor; 
+//           }
+//           .loginTxt{
+//               color: #fff;
+//           }
+//           .titleContainer{
+//               display: flex;
+//               justify-content: center;
+//               align-items: center;
+//               flex-direction: column;
+//               gap: 1.5rem;
+              
+//           }
+
+//           .inputsDiv{
+//             display: flex;
+//             flex-direction: column;
+//             justify-content: center;
+//             align-items: center;
+//             gap: 3rem;
+//             width: 100%;
+//             .input{
+//                 display: flex;
+//                 width: 70%;
+//                 font-size: 3rem;
+//                 text-align: center;
+//             }
+//           }
+//           .registerMsg{
+//             font-size: 1.3rem;
+//             color: #fff;
+//             .registerLink{
+//                 color: $lightTextColor;
+//                 font-size: 1.5rem;
+//                 background-color: transparent !important;
+//                 border-color: transparent !important;
+//                 &:hover{
+//                     cursor: pointer;
+//                 }
+//             }
+//         }
+        
+//     }
+    
+// }
+// @media(max-width:990px){
+//     .mainContainer{
+//         flex-direction: column;
+//         .leftContainer,.rightContainer{
+//             width: 100%;
+//         }
+//         .leftContainer{
+//             min-height: 50vh;
+//         }
+//         .inputsDiv{
+//             margin-top: 25rem;
+//         }
+//     }
+// }
+
