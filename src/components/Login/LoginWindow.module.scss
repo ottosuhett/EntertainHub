@@ -93,11 +93,11 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 3rem;
+            gap: 1rem;
             width: 100%;
             .input{
                 display: flex;
-                width: 70%;
+                width: 80%;
                 font-size: 3rem;
                 text-align: center;
             }
@@ -128,9 +128,12 @@
     .leftContainer{
         min-height: 75rem;
     }
-    .inputsDiv{
-        margin-top: 25rem;
-    } 
+    // .inputsDiv{
+    //     margin-top: 25rem;
+    // } 
+    .rightContainer{
+        min-height: 70rem;
+    }
 }
 
 
