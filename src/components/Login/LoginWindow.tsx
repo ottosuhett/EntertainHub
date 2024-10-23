@@ -18,7 +18,11 @@ export default function LoginWindow(props: ILoginWindowProps) {
   const [passWord, setPassword] = useState<string>('');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState<string>('');
+  const [agree, setAgree] = useState(false)
 
+  const handleCheckboxChange = () => {
+    setAgree(!agree);
+  };
   const handleRegister = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent) => {
     event.preventDefault();
   
@@ -26,7 +30,12 @@ export default function LoginWindow(props: ILoginWindowProps) {
       setToastMessage('Do not leave fields blank');
       setShowToast(true);
       return;
-    } else if (!validatePassword(newPassword)) {
+    } else if(!agree){
+      setToastMessage("You must agree to the Terms and Conditions to proceed.");
+      setShowToast(true);
+      return;
+    } 
+    else if (!validatePassword(newPassword)) {
       setToastMessage('Password must be at least 8 characters long, including letters, numbers and special symbols');
       setShowToast(true);
       return;
@@ -129,6 +138,14 @@ export default function LoginWindow(props: ILoginWindowProps) {
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
+            <Form.Check
+            type="checkbox"
+            label={<p className={styles.agreeTxt}>Agree to the Terms and Conditions</p>}
+            id={`disabled-default-checkbox`}
+            className={styles.checkBox}
+            checked={agree}
+            onChange={handleCheckboxChange}
+            />
             <ButtonComp title={"Register"} onClickEvent={handleRegister} />
           </div>
         ) : null}
@@ -164,6 +181,9 @@ export default function LoginWindow(props: ILoginWindowProps) {
               onClick={() => {
                 setOpenRegister(!openRegister);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                setNewUsername("")
+                setNewPassword("")
+                setAgree(false)
               }}
             >
               register now
