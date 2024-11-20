@@ -71,6 +71,7 @@ The project will run on http://localhost:3000. Open this URL in your browser to 
 - **RAWG API integration: Fetch detailed game data (platforms, ratings, release dates, etc.).**
 - **Supabase Integration: Uses Supabase for user management, database, and authentication**
 - **User-friendly interface: Intuitive UI to manage lists and track progress.**
+- **Testing with Jest: Reliable unit and integration tests to ensure application quality.**
 
 🛠️ Available Scripts
 In the project directory, you can run the following scripts:
@@ -79,7 +80,19 @@ In the project directory, you can run the following scripts:
 - **npm run build**: Builds the app for production.
 - **npm run start**: Runs the built app in production mode.
 - **npm run lint**: Runs the linter to find and fix issues in the code.
+-**npm test**: Runs the test suite using Jest.
 
+## 🧪 Testing
+The project uses Jest and React Testing Library for testing.
+
+-**Running Tests**
+```bash 
+    npm test
+```
+
+#### 🛠️ Writing Tests
+- **Test files are located in the same directory as the components they test, with the .test.tsx extension.**
+-**The jest.setup.js file is used to configure global setups for Jest**
 ## 📚 Technologies Used
 
 - **Next.js**: React framework for server-side rendering.
@@ -93,3 +106,5 @@ In the project directory, you can run the following scripts:
 - **jsonwebtoken (JWT)**: Secure authentication using JSON Web Tokens.
 - **RAWG API**: Source of game data.
 - **Supabase**: Backend-as-a-Service for user management, database, and authentication.
+-**Jest**: Testing framework for unit and integration tests.
+-**React Testing Library**: Simplifies testing of React components.
