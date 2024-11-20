@@ -13,7 +13,8 @@ export default function ProfileInfoCard (props: IProfileInfoCardProps) {
     const [listCount, setListCount] = useState(0);
 
     const [isLoading, setIsLoading] = useState(true);
-
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState<string>('');
     useEffect(() => {
       const fetchUserLists = async () => {
           try {
@@ -67,6 +68,50 @@ export default function ProfileInfoCard (props: IProfileInfoCardProps) {
   if (isLoading) {
     return <p>Loading data...</p>; 
   }
+  const handleDeleteUser = async () => {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('loggedUser');
+  
+    if (!token || !user) {
+      console.error('Token ou usuário ausente.');
+      return;
+    }
+  
+    try {
+      const response = await fetch('/api/delete-user', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ username: user }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log(data.message);
+        setToastMessage('Usuário deletado com sucesso.');
+        setShowToast(true);
+  
+        // Remover token e usuário do localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('loggedUser');
+  
+        // Redirecionar para a página inicial (login)
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      } else {
+        console.error('Erro ao deletar usuário:', data.error);
+      }
+    } catch (error) {
+      console.error('Erro na solicitação de exclusão:', error);
+    }
+  };
+  
+  
+  
   return (
     <Container fluid className={styles.mainContainer}>
         {
@@ -95,9 +140,9 @@ export default function ProfileInfoCard (props: IProfileInfoCardProps) {
                         <span className={styles.number}>{totalUniqueGames}</span>
                     </p>
                 </div>
-                {/* <div className={styles.btnContainer}>
-                    <Button className={styles.btn}> Edit Profile</Button>
-                </div> */}
+                <div className={styles.btnContainer}>
+                    <Button className={styles.btn} onClick={handleDeleteUser}> Delete Profile</Button>
+                </div>
             </>
             
             :
