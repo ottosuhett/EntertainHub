@@ -135,10 +135,10 @@ export default function ProfileInfoCard (props: IProfileInfoCardProps) {
                     <div className={styles.label}>List: </div> 
                     <span className={styles.number}>{listCount}</span>
                     </p>
-                    <p className={styles.labelContainer}> 
+                    <span className={styles.labelContainer}> 
                         <div className={styles.label}>Games: </div>
                         <span className={styles.number}>{totalUniqueGames}</span>
-                    </p>
+                    </span>
                 </div>
                 <div className={styles.btnContainer}>
                     <Button className={styles.btn} onClick={handleDeleteUser}> Delete Profile</Button>
