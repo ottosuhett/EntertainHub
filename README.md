@@ -80,7 +80,7 @@ In the project directory, you can run the following scripts:
 - **npm run build**: Builds the app for production.
 - **npm run start**: Runs the built app in production mode.
 - **npm run lint**: Runs the linter to find and fix issues in the code.
--**npm test**: Runs the test suite using Jest.
+- **npm test**: Runs the test suite using Jest.
 
 ## 🧪 Testing
 The project uses Jest and React Testing Library for testing.
