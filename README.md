@@ -92,7 +92,7 @@ The project uses Jest and React Testing Library for testing.
 
 #### 🛠️ Writing Tests
 - **Test files are located in the same directory as the components they test, with the .test.tsx extension.**
--**The jest.setup.js file is used to configure global setups for Jest**
+- **The jest.setup.js file is used to configure global setups for Jest**
 ## 📚 Technologies Used
 
 - **Next.js**: React framework for server-side rendering.
