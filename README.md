@@ -106,5 +106,5 @@ The project uses Jest and React Testing Library for testing.
 - **jsonwebtoken (JWT)**: Secure authentication using JSON Web Tokens.
 - **RAWG API**: Source of game data.
 - **Supabase**: Backend-as-a-Service for user management, database, and authentication.
--**Jest**: Testing framework for unit and integration tests.
--**React Testing Library**: Simplifies testing of React components.
+- **Jest**: Testing framework for unit and integration tests.
+- **React Testing Library**: Simplifies testing of React components.
