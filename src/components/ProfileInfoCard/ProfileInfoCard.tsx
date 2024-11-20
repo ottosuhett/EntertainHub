@@ -131,10 +131,10 @@ export default function ProfileInfoCard (props: IProfileInfoCardProps) {
                     
                 </div>
                 <div className={styles.body}>
-                    <p className={styles.labelContainer}>
+                    <span className={styles.labelContainer}>
                     <div className={styles.label}>List: </div> 
                     <span className={styles.number}>{listCount}</span>
-                    </p>
+                    </span>
                     <span className={styles.labelContainer}> 
                         <div className={styles.label}>Games: </div>
                         <span className={styles.number}>{totalUniqueGames}</span>
